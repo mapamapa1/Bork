@@ -1,0 +1,80 @@
+[
+  {
+    "Name": "Dungeon",
+    "Description": "You are in a small dungeon cell, carved out of rock.",
+    "RoomExits": [
+      {
+        "ConnectingRooms": { "Dungeon": "Drainage Room" },
+        "IsDoor": true,
+        "IsOpen": false,
+        "IsLocked": true
+      }
+    ],
+    "Items": [
+      {
+        "Name": "Pack of Bubblegum",
+        "Description": "A pack of bubblegum. The name of the brand is \"Hubbabubba\".",
+        "Container": [
+          {
+            "Name": "A piece of gum",
+            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
+          },
+          {
+            "Name": "A piece of gum",
+            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
+          },
+          {
+            "Name": "A piece of gum",
+            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
+          },
+          {
+            "Name": "A piece of gum",
+            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
+          },
+          {
+            "Name": "A piece of gum",
+            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
+          }
+        ]
+      },
+      {
+        "Name": "Rusty key",
+        "Description": "An old rusty key of simple design."
+      }
+    ]
+  },
+  {
+    "Name": "Oak Room",
+    "Description": "You are in a large circular room, in the middle of the room there is a patch of dirt, and on it stands a large oak tree, far above the oak in the ceiling there is a small opening with a faint blue light",
+    "Items": [
+      {
+        "Name": "Stick",
+        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
+      },
+      {
+        "Name": "Stick",
+        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
+      },
+      {
+        "Name": "Stick",
+        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
+      }
+    ],
+    "RoomObjectOfInterest": [
+      {
+        "Name": "Oak",
+        "Description": "A large oak tree, must be more than fifty years old. On the ground next to it you notice some sticks that have fallen from the tree"
+      }
+    ]
+  },
+  {
+    "Name": "Drainage Room",
+    "Description": "You are in some sort of drainage room, the floor slopes towards the center of the room where there is a grated drain in the floor that collects water from the other rooms.",
+    "RoomObjectOfInterest": [
+      {
+        "Name": "Drain",
+        "Description": "A drainage hole"
+      }
+    ]
+  }
+]

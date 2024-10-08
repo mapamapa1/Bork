@@ -1,0 +1,404 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+    public class RoomExits
+    {
+        public Dictionary<string, string> ConnectingRooms { get; set; }
+
+        public bool IsDoor { get; set; }
+
+        public bool IsOpen { get; set; }
+        public bool IsLocked { get; set; }
+
+
+        public RoomExits()
+        {
+                
+        }
+
+
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+    public class RoomExits
+    {
+        public Dictionary<string, string> ConnectingRooms { get; set; }
+
+        public bool IsDoor { get; set; }
+
+        public bool IsOpen { get; set; }
+        public bool IsLocked { get; set; }
+
+
+        public RoomExits()
+        {
+                
+        }
+
+
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+    public class GameObject
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }       
+
+
+        public void Inspect()
+        {
+            Console.WriteLine(Description);
+
+
+        }
+
+    }
+
+
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+    public class Items : GameObject
+    {
+
+        public bool IsContainer { get; set; }
+        public List<Items> Container { get; set; } = new List<Items>();
+
+        public string ItemInEnvironmentDescription { get; set; }
+
+        //public int Amount { get; set; }
+
+        public Items()
+        {
+       
+
+        }
+     
+    }
+
+
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+    public class Player
+    {
+        public string Name { get; set; }
+        public List<Items> Inventory { get; set; } = new List<Items>();
+
+        public Room Location { get; set; }
+
+        public Player()
+        {
+               //loadStartingItems()
+        }
+        public void DropItem(Items item)
+        {
+            Location.Items.Add(item);
+            Inventory.Remove(item);
+            
+        }
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+    public static class Repository
+    {
+
+
+        public static List<Room> LoadRooms()
+        {
+            List<Room> rooms = new List<Room>();
+
+            using (StreamReader reader = new StreamReader("D:\\repos\\Inlämningsuppgift3\\Inlämningsuppgift3\\Rooms.json"))
+            { 
+                string stringRooms = reader.ReadToEnd();
+                rooms = JsonSerializer.Deserialize<List<Room>>(stringRooms);
+            }
+            return rooms;
+        }
+
+        public static Dictionary<string, string[]> LoadWordList()
+        {
+            Dictionary<string, string[]> wordList = new Dictionary<string, string[]>();
+
+            using (StreamReader reader = new StreamReader("D:\\repos\\Inlämningsuppgift3\\Inlämningsuppgift3\\WordList_ActionSynonyms.json"))
+            {
+                string stringWordList = reader.ReadToEnd();
+                wordList = JsonSerializer.Deserialize<Dictionary<string, string[]>>(stringWordList);
+
+            }
+
+            return wordList;
+
+        }
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+    public class Room : GameObject
+    {
+        public List<Items> Items { get; set; } = new List<Items>();
+        public List<RoomExits> RoomExits { get; set; }
+
+        public List<RoomObjectOfInterest> RoomObjectOfInterest { get; set; } = new List<RoomObjectOfInterest>();
+
+        public Room()
+        {
+            
+
+
+
+        }
+
+
+
+        public string RoomContainsDescription()
+        {
+            string returnString = "";
+
+           foreach(Items item in Items)
+           {
+                returnString += ($"There is a {item.Name.ToLower()} on the floor\n");
+
+           }
+
+           
+
+            return returnString;
+
+        }
+
+
+
+
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+
+
+    public class RoomObjectOfInterest : GameObject
+    {
+
+
+
+    }
+
+
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+    public class WordListProcessor
+    {
+        public Dictionary<string, string[]> WordList;
+
+        public WordListProcessor()
+        {
+            WordList = Repository.LoadWordList();
+        }
+
+        public string CheckActionSynonyms(string word)
+        {
+
+            //common words check
+            foreach (string key in WordList.Keys)
+            {
+                if (word == key)
+                {
+                    return word;
+
+                }
+
+            }
+
+            //synonyms check
+            foreach (KeyValuePair<string,string[]> pair in WordList)
+            {
+                foreach(string synonym in pair.Value)
+                {
+                    if (word == synonym)
+                    {
+                        return pair.Key;
+
+                    }
+                   
+                }
+
+
+            }
+
+            return word;
+
+        }
+
+
+
+    }
+}
+using Inlämningsuppgift3.Classes;
+
+namespace Inlämningsuppgift3
+{
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+
+            GameInterface game = new GameInterface();
+            game.Game();
+
+
+
+        }
+    }
+}
+with JSON files:
+[
+  {
+    "Name": "Dungeon",
+    "Description": "You are in a small dungeon cell, carved out of rock.",
+    "RoomExits": {
+      "ConnectingRooms": ["Dungeon", "Drainage Room"],
+      "IsDoor": true,
+      "IsOpen": false,
+      "IsLocked": true
+    },
+    "Items": [
+      {
+        "Name": "Pack of Bubblegum",
+        "Description": "A pack of bubblegum. The name of the brand is \"Hubbabubba\".",
+        "Container": [
+          {
+            "Name": "A piece of gum",
+            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
+          },
+          {
+            "Name": "A piece of gum",
+            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
+          },
+          {
+            "Name": "A piece of gum",
+            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
+          },
+          {
+            "Name": "A piece of gum",
+            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
+          },
+          {
+            "Name": "A piece of gum",
+            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
+          }
+        ]
+      },
+      {
+        "Name": "Rusty key",
+        "Description": "An old rusty key of simple design."
+      }
+    ]
+  },
+  {
+    "Name": "Oak Room",
+    "Description": "You are in a large circular room, in the middle of the room there is a patch of dirt, and on it stands a large oak tree, far above the oak in the ceiling there is a small opening with a faint blue light",
+    "Items": [
+      {
+        "Name": "Stick",
+        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
+      },
+      {
+        "Name": "Stick",
+        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
+      },
+      {
+        "Name": "Stick",
+        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
+      }
+    ],
+    "RoomObjectOfInterest": [
+      {
+        "Name": "Oak",
+        "Description": "A large oak tree, must be more than fifty years old. On the ground next to it you notice some sticks that have fallen from the tree"
+      }
+    ]
+  },
+  {
+    "Name": "Drainage Room",
+    "Description": "You are in some sort of drainage room, the floor slopes towards the center of the room where there is a grated drain in the floor that collects water from the other rooms.",
+    "RoomObjectOfInterest": [
+      {
+        "Name": "Drain",
+        "Description": "A drainage hole"
+      }
+    ]
+  }
+]
+and:
+{
+  "look": [ "check", "examine", "watch", "inspect" ],
+  "go": [ "walk", "move", "proceed" ],
+  "take": [ "grab", "pick up", "pick", "snatch" ],
+  "use": [],
+  "open": [],
+  "drop": ["throw", "discard"]
+
+}

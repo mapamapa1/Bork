@@ -1,0 +1,9 @@
+{
+  "look": [ "check", "examine", "watch", "inspect" ],
+  "go": [ "walk", "move", "proceed" ],
+  "take": [ "grab", "pick up", "pick", "snatch" ],
+  "use": [],
+  "open": [],
+  "drop": ["throw", "discard"]
+
+}
