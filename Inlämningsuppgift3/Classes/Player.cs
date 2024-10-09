@@ -24,5 +24,27 @@ namespace Inlämningsuppgift3.Classes
             
         }
 
+
+        public void ShowInventory()
+        {
+
+
+            if (Inventory.Count == 0)
+            {
+                Console.WriteLine("You have no items in your inventory");
+            }
+            else
+            {
+
+                Console.WriteLine($"Inventory:");
+
+                foreach (Items item in Inventory)
+                {
+                    Console.WriteLine(item.Name);
+                }
+
+            }
+
+        }
     }
 }

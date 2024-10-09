@@ -9,7 +9,7 @@ namespace Inlämningsuppgift3.Classes
     public class Room : GameObject
     {
         public List<Items> Items { get; set; } = new List<Items>();
-        public List<RoomExits> RoomExits { get; set; }
+        public List<RoomExits> RoomExits { get; set; } = new List<RoomExits>();
 
         public List<RoomObjectOfInterest> RoomObjectOfInterest { get; set; } = new List<RoomObjectOfInterest>();
 

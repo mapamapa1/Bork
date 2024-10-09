@@ -2,16 +2,6 @@
   {
     "Name": "Dungeon",
     "Description": "You are in a small dungeon cell, carved out of rock.",
-    "RoomExits": [
-      {
-        "ExitConnection": [
-          { "North": "Drainage Room" }
-        ],
-        "IsDoor": true,
-        "IsOpen": false,
-        "IsLocked": true
-      }
-    ],
     "Items": [
       {
         "Name": "Pack of bubblegum",

@@ -34,8 +34,8 @@ namespace Inlämningsuppgift3.Classes
             else
             {
                 IndexOfFirstSpace = -1;
-                FirstWord = null;
-                SecondWordToEnd = null;
+                FirstWord = "";
+                SecondWordToEnd = "";
             }
 
             WordListProcessor wordListProcessor = new WordListProcessor();

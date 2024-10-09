@@ -29,16 +29,10 @@ namespace Inlämningsuppgift3.Classes
             Player.Location = Rooms[0];
 
         }
-        
-        
-        
+              
         public void Game()
         {
-            string playerInput;
-            string[] playerInputSplittedString;
-            int indexOfFirstSpace;
-            string firstWord;
-            string secondWordToEnd;                                                                                     
+            string playerInput;                                                                               
             bool newLocation = true;
 
             while (GameRunning)
@@ -55,27 +49,7 @@ namespace Inlämningsuppgift3.Classes
                 playerInput = Console.ReadLine();
                 InputProcessor.Process(playerInput);
 
-                playerInputSplittedString = playerInput.Split(" ");
-
-                
-
-                if (playerInputSplittedString.Length > 1)
-                {
-                    indexOfFirstSpace = playerInput.IndexOf(' ');
-                    firstWord = playerInput.Substring(0, indexOfFirstSpace);
-                    secondWordToEnd = playerInput.Substring(indexOfFirstSpace + 1);
-
-                }
-                else
-                {
-                    indexOfFirstSpace = -1;
-                    firstWord = null;
-                    secondWordToEnd = null;
-                }
-
-                playerInputSplittedString[0] = WordListProcessor.CheckActionSynonyms(playerInputSplittedString[0]);
-
-                switch (playerInputSplittedString[0])
+                switch (InputProcessor.PlayerInputSplittedString[0])
                 {
                     case (null):
                     case (""):
@@ -85,7 +59,7 @@ namespace Inlämningsuppgift3.Classes
 
                     case ("look"):
 
-                        if (playerInputSplittedString.Length == 0)
+                        if (InputProcessor.PlayerInputSplittedString.Length == 1)
                         {
 
                             Console.WriteLine(Player.Location.Description);
@@ -97,7 +71,7 @@ namespace Inlämningsuppgift3.Classes
 
                             foreach (Items item in Player.Location.Items)
                             {
-                                if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                                if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
                                 {
                                     Console.WriteLine(item.Description);
                                     
@@ -105,7 +79,7 @@ namespace Inlämningsuppgift3.Classes
                             }
                             foreach (Items item in Player.Inventory)
                             {
-                                if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                                if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
                                 {
                                     Console.WriteLine($"{item.Description} [in inventory]");
                                     
@@ -118,7 +92,7 @@ namespace Inlämningsuppgift3.Classes
 
                     case ("inventory"):
                     case ("open inventory"):
-                        ShowInventory(Player);
+                        Player.ShowInventory();
                         break;
 
                     //case ("go"):
@@ -131,11 +105,11 @@ namespace Inlämningsuppgift3.Classes
 
                 
                 
-                if (playerInputSplittedString[0].ToLower() == "take" && playerInputSplittedString.Length > 1)
+                if (InputProcessor.PlayerInputSplittedString[0].ToLower() == "take" && InputProcessor.PlayerInputSplittedString.Length > 1)
                 {
                     foreach (Items item in Player.Location.Items)
                     {
-                        if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                        if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
                         {
                             Player.Location.Items.Remove(item);
                             Player.Inventory.Add(item);
@@ -146,12 +120,12 @@ namespace Inlämningsuppgift3.Classes
 
                 }
 
-                if (playerInputSplittedString[0].ToLower() == "drop" && playerInputSplittedString.Length > 1)
+                if (InputProcessor.PlayerInputSplittedString[0].ToLower() == "drop" && InputProcessor.PlayerInputSplittedString.Length > 1)
                 {
 
                     foreach (Items item in Player.Inventory)
                     {
-                        if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                        if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
                         {
                             Player.Location.Items.Add(item);
                             Player.Inventory.Remove(item);
@@ -185,27 +159,6 @@ namespace Inlämningsuppgift3.Classes
 
         }
 
-        public void ShowInventory(Player player)
-        {
-           
-
-            if (player.Inventory.Count == 0)
-            {
-                Console.WriteLine("You have no items in your inventory");
-            }
-            else
-            {
-
-                Console.WriteLine($"Inventory:");
-
-                foreach (Items item in Player.Inventory)
-                {
-                    Console.WriteLine(item.Name);
-                }
-
-            }
-
-        }
 
         public void Look(Player player)
         {
