@@ -4,7 +4,9 @@
     "Description": "You are in a small dungeon cell, carved out of rock.",
     "RoomExits": [
       {
-        "ConnectingRooms": { "Dungeon": "Drainage Room" },
+        "ExitConnection": [
+          { "North": "Drainage Room" }
+        ],
         "IsDoor": true,
         "IsOpen": false,
         "IsLocked": true
@@ -12,7 +14,8 @@
     ],
     "Items": [
       {
-        "Name": "Pack of Bubblegum",
+        "Name": "Pack of bubblegum",
+        "Synonyms": ["bubblegum", "gum"],
         "Description": "A pack of bubblegum. The name of the brand is \"Hubbabubba\".",
         "Container": [
           {
@@ -39,6 +42,7 @@
       },
       {
         "Name": "Rusty key",
+        "Synonyms": ["key"],
         "Description": "An old rusty key of simple design."
       }
     ]

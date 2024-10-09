@@ -8,7 +8,7 @@ namespace Inlämningsuppgift3.Classes
 {
     public class RoomExits
     {
-        public Dictionary<string, string> ConnectingRooms { get; set; }
+        public Dictionary<string, string> ExitConnection { get; set; }
 
         public bool IsDoor { get; set; }
 

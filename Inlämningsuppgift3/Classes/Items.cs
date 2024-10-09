@@ -12,6 +12,8 @@ namespace Inlämningsuppgift3.Classes
         public bool IsContainer { get; set; }
         public List<Items> Container { get; set; } = new List<Items>();
 
+        public string[] Synonyms { get; set; }
+
         public string ItemInEnvironmentDescription { get; set; }
 
         //public int Amount { get; set; }

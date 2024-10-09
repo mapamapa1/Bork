@@ -29,7 +29,7 @@ namespace Inlämningsuppgift3.Classes
 
            foreach(Items item in Items)
            {
-                returnString += ($"There is a {item.Name.ToLower()} on the floor\n");
+                returnString += ($"There is a {item.Name.ToLower()} on the floor.\n");
 
            }
 
