@@ -65,6 +65,7 @@
   {
     "Name": "Drainage Room",
     "Description": "You are in some sort of drainage room, the floor slopes towards the center of the room where there is a grated drain in the floor that collects water from the other rooms.",
+    "RoomExits": { "South": "Dungeon" },
     "RoomObjectOfInterest": [
       {
         "Name": "Drain",

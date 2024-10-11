@@ -95,8 +95,10 @@ namespace Inlämningsuppgift3.Classes
                         Player.ShowInventory();
                         break;
 
-                    //case ("go"):
+                    case ("go"):
 
+                        newLocation = Player.Move(InputProcessor.PlayerInputSplittedString[1], Rooms);
+                        break;
                         
 
 

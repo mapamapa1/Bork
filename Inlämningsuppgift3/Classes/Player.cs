@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -43,6 +45,46 @@ namespace Inlämningsuppgift3.Classes
                     Console.WriteLine(item.Name);
                 }
 
+            }
+
+        }
+
+        public bool Move(string direction, List <Room> roomList)
+        {
+
+            bool hasMoved = false;
+
+            foreach(KeyValuePair<string, string> pair in Location.RoomExits)
+            {
+                string newLocation = "";
+
+                if (direction.ToLower() == pair.Key.ToLower())
+                {
+                    newLocation = pair.Value;
+
+                }
+
+                foreach(Room room in roomList)
+                {
+                    if (newLocation == room.Name)
+                    {
+                        Location = room;
+                        hasMoved = true;
+
+                    }
+                }
+
+            }
+
+            if (hasMoved)
+            {
+                return true;
+
+            }
+            else
+            {
+                Console.WriteLine("You can't move in that direction.");
+                return false;
             }
 
         }
