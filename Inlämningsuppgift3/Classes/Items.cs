@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Inlämningsuppgift3.Classes
 {
-    public class Items : GameObject
+    public class Item : GameObject
     {
 
         public bool IsContainer { get; set; }
-        public List<Items> Container { get; set; } = new List<Items>();
+        public List<Item> Container { get; set; } = new List<Item>();
 
         public string[] Synonyms { get; set; }
 
@@ -18,7 +18,7 @@ namespace Inlämningsuppgift3.Classes
 
         //public int Amount { get; set; }
 
-        public Items()
+        public Item()
         {
        
 

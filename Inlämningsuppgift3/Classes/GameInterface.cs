@@ -69,7 +69,7 @@ namespace Inlämningsuppgift3.Classes
                         else
                         {
 
-                            foreach (Items item in Player.Location.Items)
+                            foreach (Item item in Player.Location.Items)
                             {
                                 if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
                                 {
@@ -77,7 +77,7 @@ namespace Inlämningsuppgift3.Classes
                                     
                                 }
                             }
-                            foreach (Items item in Player.Inventory)
+                            foreach (Item item in Player.Inventory)
                             {
                                 if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
                                 {
@@ -109,7 +109,7 @@ namespace Inlämningsuppgift3.Classes
                 
                 if (InputProcessor.PlayerInputSplittedString[0].ToLower() == "take" && InputProcessor.PlayerInputSplittedString.Length > 1)
                 {
-                    foreach (Items item in Player.Location.Items)
+                    foreach (Item item in Player.Location.Items)
                     {
                         if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
                         {
@@ -125,7 +125,7 @@ namespace Inlämningsuppgift3.Classes
                 if (InputProcessor.PlayerInputSplittedString[0].ToLower() == "drop" && InputProcessor.PlayerInputSplittedString.Length > 1)
                 {
 
-                    foreach (Items item in Player.Inventory)
+                    foreach (Item item in Player.Inventory)
                     {
                         if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
                         {

@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace Inlämningsuppgift3.Classes
 {
-    public class Door
+    public class RoomExit
     {
+        public string Direction { get; set; }
 
-        public bool IsOpen { get; set; }
+        public string Connection { get; set; }
         public bool IsLocked { get; set; }
 
 
-        public Door()
+        public RoomExit()
         {
                 
         }

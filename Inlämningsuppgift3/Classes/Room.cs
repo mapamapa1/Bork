@@ -8,16 +8,16 @@ namespace Inlämningsuppgift3.Classes
 {
     public class Room : GameObject
     {
-        public List<Items> Items { get; set; }
-        public Dictionary<string, string> RoomExits { get; set; }
+        public List<Item> Items { get; set; }
+        public List<RoomExit> RoomExits { get; set; }
 
         public List<RoomObjectOfInterest> RoomObjectOfInterest { get; set; }
 
         public Room()
         {
-            Items = new List<Items>();
+            Items = new List<Item>();
 
-            RoomExits = new Dictionary<string, string>();
+            RoomExits = new List<RoomExit>();
 
             RoomObjectOfInterest = new List<RoomObjectOfInterest>();
 
@@ -29,7 +29,7 @@ namespace Inlämningsuppgift3.Classes
         {
             string returnString = "";
 
-           foreach(Items item in Items)
+           foreach(Item item in Items)
            {
                 returnString += ($"There is a {item.Name.ToLower()} on the floor.\n");
 

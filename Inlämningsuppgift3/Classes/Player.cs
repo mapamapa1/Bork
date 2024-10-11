@@ -11,7 +11,7 @@ namespace Inlämningsuppgift3.Classes
     public class Player
     {
         public string Name { get; set; }
-        public List<Items> Inventory { get; set; } = new List<Items>();
+        public List<Item> Inventory { get; set; } = new List<Item>();
 
         public Room Location { get; set; }
 
@@ -19,7 +19,7 @@ namespace Inlämningsuppgift3.Classes
         {
                //loadStartingItems()
         }
-        public void DropItem(Items item)
+        public void DropItem(Item item)
         {
             Location.Items.Add(item);
             Inventory.Remove(item);
@@ -40,7 +40,7 @@ namespace Inlämningsuppgift3.Classes
 
                 Console.WriteLine($"Inventory:");
 
-                foreach (Items item in Inventory)
+                foreach (Item item in Inventory)
                 {
                     Console.WriteLine(item.Name);
                 }
@@ -54,13 +54,13 @@ namespace Inlämningsuppgift3.Classes
 
             bool hasMoved = false;
 
-            foreach(KeyValuePair<string, string> pair in Location.RoomExits)
+            foreach(RoomExit roomexit in Location.RoomExits)
             {
                 string newLocation = "";
 
-                if (direction.ToLower() == pair.Key.ToLower())
+                if (direction.ToLower() == roomexit.Direction.ToLower())
                 {
-                    newLocation = pair.Value;
+                    newLocation = roomexit.Connection;
 
                 }
 
@@ -86,6 +86,15 @@ namespace Inlämningsuppgift3.Classes
                 Console.WriteLine("You can't move in that direction.");
                 return false;
             }
+
+        }
+
+        public void Use()
+        {
+            
+
+
+
 
         }
     }
