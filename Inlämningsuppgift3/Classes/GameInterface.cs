@@ -60,36 +60,8 @@ namespace Inlämningsuppgift3.Classes
 
                     case ("look"):
 
-                        if (InputProcessor.PlayerInputSplittedString.Length == 1)
-                        {
-
-                            Console.WriteLine(Player.Location.Description);
-                            Console.WriteLine(Player.Location.RoomContainsDescription());
-                            break;
-                        }
-                        else
-                        {
-
-                            foreach (Item item in Player.Location.Items)
-                            {
-                                if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
-                                {
-                                    Console.WriteLine(item.Description);
-
-                                }
-                            }
-                            foreach (Item item in Player.Inventory)
-                            {
-                                if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
-                                {
-                                    Console.WriteLine($"{item.Description} [in inventory]");
-
-                                }
-                            }
-                        }
+                        Player.Look(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
                         break;
-
-
 
                     case ("inventory"):
                     case ("open inventory"):

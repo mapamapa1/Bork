@@ -44,6 +44,38 @@ namespace Inlämningsuppgift3.Classes
             }
         }
 
+        public void Look(string secondWordToEnd, string[] splittedString)
+        {
+            if (splittedString.Length == 1)
+            {
+
+                Console.WriteLine(Location.Description);
+                Console.WriteLine(Location.RoomContainsDescription());
+                
+            }
+            else
+            {
+
+                foreach (Item item in Location.Items)
+                {
+                    if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                    {
+                        Console.WriteLine(item.Description);
+
+                    }
+                }
+                foreach (Item item in Inventory)
+                {
+                    if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                    {
+                        Console.WriteLine($"{item.Description} [in inventory]");
+
+                    }
+                }
+            }
+
+        }
+
         public bool Move(string direction, List <Room> roomList)
         {
 
@@ -101,7 +133,30 @@ namespace Inlämningsuppgift3.Classes
                     }
 
                 }
-              //else om USE endast används på 1 item
+                else
+                {
+                    if (secondWordToEnd == "pack of bubblegum" || secondWordToEnd == "gum")
+                    {
+
+                        foreach (Item item in Location.Items)
+                        {
+                            if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                            {                               
+
+                            }
+                        }
+                        foreach (Item item in Inventory)
+                        {
+                            if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                            {
+                         
+
+                            }
+                        }
+                    }
+
+                }
+                
 
             }
             else
