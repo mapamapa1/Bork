@@ -47,6 +47,7 @@ namespace Inlämningsuppgift3.Classes
 
                 Console.WriteLine();
                 playerInput = Console.ReadLine();
+
                 InputProcessor.Process(playerInput);
 
                 switch (InputProcessor.PlayerInputSplittedString[0])
@@ -54,7 +55,7 @@ namespace Inlämningsuppgift3.Classes
                     case (null):
                     case (""):
 
-                        Console.WriteLine("Type a command:");
+                        Console.WriteLine("Write a command.");
                         break;
 
                     case ("look"):
@@ -99,52 +100,25 @@ namespace Inlämningsuppgift3.Classes
 
                         newLocation = Player.Move(InputProcessor.PlayerInputSplittedString[1], Rooms);
                         break;
+
+                    case ("take"):
+                        Player.Take(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+
+                        break;
+
+                    case ("drop"):
+                        Player.Drop(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+
+                        break;
+
+                    default:
+                        Console.WriteLine($"I don't know the word \"{InputProcessor.PlayerInputSplittedString[0]}\".");
+                        break;
                         
 
-
-
                 }
-
-                
-                
-                if (InputProcessor.PlayerInputSplittedString[0].ToLower() == "take" && InputProcessor.PlayerInputSplittedString.Length > 1)
-                {
-                    foreach (Item item in Player.Location.Items)
-                    {
-                        if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
-                        {
-                            Player.Location.Items.Remove(item);
-                            Player.Inventory.Add(item);
-                            Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
-                            break;
-                        }
-                    }
-
-                }
-
-                if (InputProcessor.PlayerInputSplittedString[0].ToLower() == "drop" && InputProcessor.PlayerInputSplittedString.Length > 1)
-                {
-
-                    foreach (Item item in Player.Inventory)
-                    {
-                        if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
-                        {
-                            Player.Location.Items.Add(item);
-                            Player.Inventory.Remove(item);
-                            Console.WriteLine($"You drop the {item.Name.ToLower()}.");
-
-                            break;
-                        }
-                    }
-
-
-
-                }
-
-
+           
             }
-
-
 
         }
         

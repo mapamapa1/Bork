@@ -21,14 +21,15 @@ namespace Inlämningsuppgift3.Classes
         }
         public void Process(string playerInput)
         {
-            PlayerInput = playerInput;
-            PlayerInputSplittedString = playerInput.Split(" ");
+ 
+            PlayerInput = playerInput.ToLower();
+            PlayerInputSplittedString = PlayerInput.Split(" ");
 
             if (PlayerInputSplittedString.Length > 1)
             {
-                IndexOfFirstSpace = playerInput.IndexOf(' ');
-                FirstWord = playerInput.Substring(0, IndexOfFirstSpace);
-                SecondWordToEnd = playerInput.Substring(IndexOfFirstSpace + 1);
+                IndexOfFirstSpace = PlayerInput.IndexOf(' ');
+                FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
+                SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
 
             }
             else
@@ -37,6 +38,8 @@ namespace Inlämningsuppgift3.Classes
                 FirstWord = "";
                 SecondWordToEnd = "";
             }
+
+            
 
             WordListProcessor wordListProcessor = new WordListProcessor();
             PlayerInputSplittedString[0] = wordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);

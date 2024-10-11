@@ -26,14 +26,11 @@ namespace Inlämningsuppgift3.Classes
             
         }
 
-
         public void ShowInventory()
         {
-
-
             if (Inventory.Count == 0)
             {
-                Console.WriteLine("You have no items in your inventory");
+                Console.WriteLine("You have no items in your inventory.");
             }
             else
             {
@@ -44,9 +41,7 @@ namespace Inlämningsuppgift3.Classes
                 {
                     Console.WriteLine(item.Name);
                 }
-
             }
-
         }
 
         public bool Move(string direction, List <Room> roomList)
@@ -92,10 +87,49 @@ namespace Inlämningsuppgift3.Classes
         public void Use()
         {
             
+        }
 
+        public void Take(string takenObject, string[] splittedString)
+        {
+            if (splittedString.Length > 1)
+            {
+                foreach (Item item in Location.Items)
+                {
+                    if (item.Name.ToLower() == takenObject.ToLower())
+                    {
+                        Location.Items.Remove(item);
+                        Inventory.Add(item);
+                        Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("What do you want to take?");
+            }
+        }
 
+        public void Drop(string droppedObject, string[] splittedString)
+        {
+            if (splittedString.Length > 1)
+            {
 
-
+                foreach (Item item in Inventory)
+                {
+                    if (item.Name.ToLower() == droppedObject.ToLower())
+                    {
+                        Location.Items.Add(item);
+                        Inventory.Remove(item);
+                        Console.WriteLine($"You drop the {item.Name.ToLower()}.");
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("What do you want to drop?");
+            }
         }
     }
 }

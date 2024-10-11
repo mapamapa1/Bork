@@ -6,49 +6,170 @@ using System.Threading.Tasks;
 
 namespace Inlämningsuppgift3.Classes
 {
-    public class RoomExits
+    public class GameInterface
     {
-        public Dictionary<string, string> ConnectingRooms { get; set; }
+        public bool GameRunning { get; set; }
+        public Player Player { get; set; }
 
-        public bool IsDoor { get; set; }
+        public List<Room> Rooms { get; set; }
 
-        public bool IsOpen { get; set; }
-        public bool IsLocked { get; set; }
+        public InputProcessor InputProcessor { get; set; }
+
+        public WordListProcessor WordListProcessor { get; set; }
 
 
-        public RoomExits()
+        public GameInterface()
+     
         {
+            GameRunning = true;
+            Player = new Player();
+            Rooms = new List<Room>();
+            Rooms = Repository.LoadRooms();
+            InputProcessor = new InputProcessor();
+            Player.Location = Rooms[0];
+
+        }
+              
+        public void Game()
+        {
+            string playerInput;                                                                               
+            bool newLocation = true;
+
+            while (GameRunning)
+            {
+
+                if (newLocation)
+                {
+                    Console.WriteLine(Player.Location.Description);
+                    Console.WriteLine(Player.Location.RoomContainsDescription());
+                    newLocation = false;
+                }
+
+                Console.WriteLine();
+                playerInput = Console.ReadLine();
+                InputProcessor.Process(playerInput);
+
+                switch (InputProcessor.PlayerInputSplittedString[0])
+                {
+                    case (null):
+                    case (""):
+
+                        Console.WriteLine("Type a command:");
+                        break;
+
+                    case ("look"):
+
+                        if (InputProcessor.PlayerInputSplittedString.Length == 1)
+                        {
+
+                            Console.WriteLine(Player.Location.Description);
+                            Console.WriteLine(Player.Location.RoomContainsDescription());
+                            break;
+                        }
+                        else
+                        {
+
+                            foreach (Item item in Player.Location.Items)
+                            {
+                                if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
+                                {
+                                    Console.WriteLine(item.Description);
+                                    
+                                }
+                            }
+                            foreach (Item item in Player.Inventory)
+                            {
+                                if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
+                                {
+                                    Console.WriteLine($"{item.Description} [in inventory]");
+                                    
+                                }
+                            }
+                        }
+                        break;
+                        
+
+
+                    case ("inventory"):
+                    case ("open inventory"):
+                        Player.ShowInventory();
+                        break;
+
+                    case ("go"):
+
+                        newLocation = Player.Move(InputProcessor.PlayerInputSplittedString[1], Rooms);
+                        break;
+                        
+
+
+
+                }
+
                 
+                
+                if (InputProcessor.PlayerInputSplittedString[0].ToLower() == "take" && InputProcessor.PlayerInputSplittedString.Length > 1)
+                {
+                    foreach (Item item in Player.Location.Items)
+                    {
+                        if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
+                        {
+                            Player.Location.Items.Remove(item);
+                            Player.Inventory.Add(item);
+                            Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
+                            break;
+                        }
+                    }
+
+                }
+
+                if (InputProcessor.PlayerInputSplittedString[0].ToLower() == "drop" && InputProcessor.PlayerInputSplittedString.Length > 1)
+                {
+
+                    foreach (Item item in Player.Inventory)
+                    {
+                        if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
+                        {
+                            Player.Location.Items.Add(item);
+                            Player.Inventory.Remove(item);
+                            Console.WriteLine($"You drop the {item.Name.ToLower()}.");
+
+                            break;
+                        }
+                    }
+
+
+
+                }
+
+
+            }
+
+
+
+        }
+        
+        public void InventoryOpened()
+        {
+
+
+
+        }
+        
+        public void InitializeGame()
+        {
+
+
         }
 
 
-
-    }
-}
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Inlämningsuppgift3.Classes
-{
-    public class RoomExits
-    {
-        public Dictionary<string, string> ConnectingRooms { get; set; }
-
-        public bool IsDoor { get; set; }
-
-        public bool IsOpen { get; set; }
-        public bool IsLocked { get; set; }
-
-
-        public RoomExits()
+        public void Look(Player player)
         {
-                
+
+
+
+
+
         }
-
-
 
     }
 }
@@ -79,23 +200,72 @@ namespace Inlämningsuppgift3.Classes
 }
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Inlämningsuppgift3.Classes
 {
-    public class Items : GameObject
+    public class InputProcessor
+    {
+        public string PlayerInput { get; set; }
+        public string[] PlayerInputSplittedString { get; set; }
+        public int IndexOfFirstSpace { get; set; }
+        public string FirstWord { get; set; }
+        public string SecondWordToEnd { get; set; }
+
+        public InputProcessor()
+        {
+            
+        }
+        public void Process(string playerInput)
+        {
+            PlayerInput = playerInput;
+            PlayerInputSplittedString = playerInput.Split(" ");
+
+            if (PlayerInputSplittedString.Length > 1)
+            {
+                IndexOfFirstSpace = playerInput.IndexOf(' ');
+                FirstWord = playerInput.Substring(0, IndexOfFirstSpace);
+                SecondWordToEnd = playerInput.Substring(IndexOfFirstSpace + 1);
+
+            }
+            else
+            {
+                IndexOfFirstSpace = -1;
+                FirstWord = "";
+                SecondWordToEnd = "";
+            }
+
+            WordListProcessor wordListProcessor = new WordListProcessor();
+            PlayerInputSplittedString[0] = wordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
+
+        }
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+    public class Item : GameObject
     {
 
         public bool IsContainer { get; set; }
-        public List<Items> Container { get; set; } = new List<Items>();
+        public List<Item> Container { get; set; } = new List<Item>();
+
+        public string[] Synonyms { get; set; }
 
         public string ItemInEnvironmentDescription { get; set; }
 
         //public int Amount { get; set; }
 
-        public Items()
+        public Item()
         {
        
 
@@ -107,7 +277,9 @@ namespace Inlämningsuppgift3.Classes
 }
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -116,7 +288,7 @@ namespace Inlämningsuppgift3.Classes
     public class Player
     {
         public string Name { get; set; }
-        public List<Items> Inventory { get; set; } = new List<Items>();
+        public List<Item> Inventory { get; set; } = new List<Item>();
 
         public Room Location { get; set; }
 
@@ -124,13 +296,84 @@ namespace Inlämningsuppgift3.Classes
         {
                //loadStartingItems()
         }
-        public void DropItem(Items item)
+        public void DropItem(Item item)
         {
             Location.Items.Add(item);
             Inventory.Remove(item);
             
         }
 
+
+        public void ShowInventory()
+        {
+
+
+            if (Inventory.Count == 0)
+            {
+                Console.WriteLine("You have no items in your inventory");
+            }
+            else
+            {
+
+                Console.WriteLine($"Inventory:");
+
+                foreach (Item item in Inventory)
+                {
+                    Console.WriteLine(item.Name);
+                }
+
+            }
+
+        }
+
+        public bool Move(string direction, List <Room> roomList)
+        {
+
+            bool hasMoved = false;
+
+            foreach(RoomExit roomexit in Location.RoomExits)
+            {
+                string newLocation = "";
+
+                if (direction.ToLower() == roomexit.Direction.ToLower())
+                {
+                    newLocation = roomexit.Connection;
+
+                }
+
+                foreach(Room room in roomList)
+                {
+                    if (newLocation == room.Name)
+                    {
+                        Location = room;
+                        hasMoved = true;
+
+                    }
+                }
+
+            }
+
+            if (hasMoved)
+            {
+                return true;
+
+            }
+            else
+            {
+                Console.WriteLine("You can't move in that direction.");
+                return false;
+            }
+
+        }
+
+        public void Use()
+        {
+            
+
+
+
+
+        }
     }
 }
 using System;
@@ -185,16 +428,18 @@ namespace Inlämningsuppgift3.Classes
 {
     public class Room : GameObject
     {
-        public List<Items> Items { get; set; } = new List<Items>();
-        public List<RoomExits> RoomExits { get; set; }
+        public List<Item> Items { get; set; }
+        public List<RoomExit> RoomExits { get; set; }
 
-        public List<RoomObjectOfInterest> RoomObjectOfInterest { get; set; } = new List<RoomObjectOfInterest>();
+        public List<RoomObjectOfInterest> RoomObjectOfInterest { get; set; }
 
         public Room()
         {
-            
+            Items = new List<Item>();
 
+            RoomExits = new List<RoomExit>();
 
+            RoomObjectOfInterest = new List<RoomObjectOfInterest>();
 
         }
 
@@ -204,9 +449,9 @@ namespace Inlämningsuppgift3.Classes
         {
             string returnString = "";
 
-           foreach(Items item in Items)
+           foreach(Item item in Items)
            {
-                returnString += ($"There is a {item.Name.ToLower()} on the floor\n");
+                returnString += ($"There is a {item.Name.ToLower()} on the floor.\n");
 
            }
 
@@ -217,6 +462,31 @@ namespace Inlämningsuppgift3.Classes
         }
 
 
+
+
+
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Inlämningsuppgift3.Classes
+{
+    public class RoomExit
+    {
+        public string Direction { get; set; }
+
+        public string Connection { get; set; }
+        public bool IsLocked { get; set; }
+
+
+        public RoomExit()
+        {
+                
+        }
 
 
 
@@ -291,42 +561,23 @@ namespace Inlämningsuppgift3.Classes
             return word;
 
         }
+    
+
 
 
 
     }
 }
-using Inlämningsuppgift3.Classes;
-
-namespace Inlämningsuppgift3
-{
-    public class Program
-    {
-        static void Main(string[] args)
-        {
-
-            GameInterface game = new GameInterface();
-            game.Game();
-
-
-
-        }
-    }
-}
-with JSON files:
 [
   {
     "Name": "Dungeon",
     "Description": "You are in a small dungeon cell, carved out of rock.",
-    "RoomExits": {
-      "ConnectingRooms": ["Dungeon", "Drainage Room"],
-      "IsDoor": true,
-      "IsOpen": false,
-      "IsLocked": true
-    },
+    "RoomExits": [ { "Direction": "North", "Connection" : "Drainage Room", "IsLocked" : true } ],
+
     "Items": [
       {
-        "Name": "Pack of Bubblegum",
+        "Name": "Pack of bubblegum",
+        "Synonyms": ["bubblegum", "gum"],
         "Description": "A pack of bubblegum. The name of the brand is \"Hubbabubba\".",
         "Container": [
           {
@@ -353,6 +604,7 @@ with JSON files:
       },
       {
         "Name": "Rusty key",
+        "Synonyms": ["key"],
         "Description": "An old rusty key of simple design."
       }
     ]
@@ -360,6 +612,12 @@ with JSON files:
   {
     "Name": "Oak Room",
     "Description": "You are in a large circular room, in the middle of the room there is a patch of dirt, and on it stands a large oak tree, far above the oak in the ceiling there is a small opening with a faint blue light",
+    "RoomExits": [
+      {
+        "Direction": "East",
+        "Connection": "Drainage Room"
+      }
+    ],
     "Items": [
       {
         "Name": "Stick",
@@ -384,6 +642,16 @@ with JSON files:
   {
     "Name": "Drainage Room",
     "Description": "You are in some sort of drainage room, the floor slopes towards the center of the room where there is a grated drain in the floor that collects water from the other rooms.",
+    "RoomExits": [
+      {
+        "Direction": "West",
+        "Connection": "Oak Room"
+      },
+      {
+        "Direction": "South",
+        "Connection":  "Dungeon"
+      }
+    ],
     "RoomObjectOfInterest": [
       {
         "Name": "Drain",
@@ -392,13 +660,17 @@ with JSON files:
     ]
   }
 ]
-and:
 {
   "look": [ "check", "examine", "watch", "inspect" ],
   "go": [ "walk", "move", "proceed" ],
-  "take": [ "grab", "pick up", "pick", "snatch" ],
+  "take": [ "grab", "pick up", "pick", "snatch", "get" ],
   "use": [],
   "open": [],
   "drop": ["throw", "discard"]
 
 }
+[
+  [ "on", "with", "and" ]
+
+]
+
