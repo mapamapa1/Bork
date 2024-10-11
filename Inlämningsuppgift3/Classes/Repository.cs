@@ -23,7 +23,7 @@ namespace Inlämningsuppgift3.Classes
             return rooms;
         }
 
-        public static Dictionary<string, string[]> LoadWordList()
+        public static Dictionary<string, string[]> LoadActionWordList()
         {
             Dictionary<string, string[]> wordList = new Dictionary<string, string[]>();
 
@@ -36,6 +36,21 @@ namespace Inlämningsuppgift3.Classes
 
             return wordList;
 
+        }
+
+        public static string[] LoadPrepositionWordList()
+        {
+            string[] wordList;
+
+            using (StreamReader reader = new StreamReader("D:\\repos\\Inlämningsuppgift3\\Inlämningsuppgift3\\WordList_Prepositions.json"))
+            {
+                string stringWordList = reader.ReadToEnd();
+                wordList = JsonSerializer.Deserialize<string[]>(stringWordList);
+
+            }
+
+
+            return wordList;
         }
 
     }

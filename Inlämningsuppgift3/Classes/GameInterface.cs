@@ -19,7 +19,7 @@ namespace Inlämningsuppgift3.Classes
 
 
         public GameInterface()
-     
+
         {
             GameRunning = true;
             Player = new Player();
@@ -29,10 +29,10 @@ namespace Inlämningsuppgift3.Classes
             Player.Location = Rooms[0];
 
         }
-              
+
         public void Game()
         {
-            string playerInput;                                                                               
+            string playerInput;
             bool newLocation = true;
 
             while (GameRunning)
@@ -75,7 +75,7 @@ namespace Inlämningsuppgift3.Classes
                                 if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
                                 {
                                     Console.WriteLine(item.Description);
-                                    
+
                                 }
                             }
                             foreach (Item item in Player.Inventory)
@@ -83,12 +83,12 @@ namespace Inlämningsuppgift3.Classes
                                 if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
                                 {
                                     Console.WriteLine($"{item.Description} [in inventory]");
-                                    
+
                                 }
                             }
                         }
                         break;
-                        
+
 
 
                     case ("inventory"):
@@ -99,6 +99,11 @@ namespace Inlämningsuppgift3.Classes
                     case ("go"):
 
                         newLocation = Player.Move(InputProcessor.PlayerInputSplittedString[1], Rooms);
+                        break;
+
+                    case ("use"):
+                        Player.Use(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+
                         break;
 
                     case ("take"):
@@ -114,34 +119,11 @@ namespace Inlämningsuppgift3.Classes
                     default:
                         Console.WriteLine($"I don't know the word \"{InputProcessor.PlayerInputSplittedString[0]}\".");
                         break;
-                        
+
 
                 }
-           
+
             }
-
-        }
-        
-        public void InventoryOpened()
-        {
-
-
-
-        }
-        
-        public void InitializeGame()
-        {
-
-
-        }
-
-
-        public void Look(Player player)
-        {
-
-
-
-
 
         }
 

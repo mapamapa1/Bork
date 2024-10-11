@@ -68,27 +68,58 @@ namespace Inlämningsuppgift3.Classes
 
                     }
                 }
-
             }
 
             if (hasMoved)
             {
                 return true;
-
             }
             else
             {
                 Console.WriteLine("You can't move in that direction.");
                 return false;
             }
-
         }
 
-        public void Use()
+        public void Use(string secondWordToEnd, string[] splittedString)
         {
-            
+            if (splittedString.Length > 1)
+            {
+                if (secondWordToEnd.Contains("on"))
+                {
+                    for (int i = 0; i < splittedString.Length; i++)
+                    {
+                        if (splittedString[i] == "on")
+                        {
+                            string item1 = splittedString[i - 1];
+                            string item2 = splittedString[i + 1];
+
+                            this.Combination(item1, item2);
+
+                        }
+
+                    }
+
+                }
+              //else om USE endast används på 1 item
+
+            }
+            else
+            {
+                Console.WriteLine("What do you want to 'use'?");
+            }
+
         }
 
+        public void Combination(string item1, string item2)
+        {
+
+            Console.WriteLine("kombination");
+
+
+
+
+        }
         public void Take(string takenObject, string[] splittedString)
         {
             if (splittedString.Length > 1)
@@ -106,7 +137,7 @@ namespace Inlämningsuppgift3.Classes
             }
             else
             {
-                Console.WriteLine("What do you want to take?");
+                Console.WriteLine("What do you want to 'take'?");
             }
         }
 
@@ -128,7 +159,7 @@ namespace Inlämningsuppgift3.Classes
             }
             else
             {
-                Console.WriteLine("What do you want to drop?");
+                Console.WriteLine("What do you want to 'drop'?");
             }
         }
     }

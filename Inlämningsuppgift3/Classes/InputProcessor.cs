@@ -15,9 +15,11 @@ namespace Inlämningsuppgift3.Classes
         public string FirstWord { get; set; }
         public string SecondWordToEnd { get; set; }
 
+        public WordListProcessor WordListProcessor { get; set; }
+
         public InputProcessor()
         {
-            
+            WordListProcessor = new WordListProcessor();
         }
         public void Process(string playerInput)
         {
@@ -30,6 +32,7 @@ namespace Inlämningsuppgift3.Classes
                 IndexOfFirstSpace = PlayerInput.IndexOf(' ');
                 FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
                 SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+                CheckAndReplacePrepositions();
 
             }
             else
@@ -39,12 +42,20 @@ namespace Inlämningsuppgift3.Classes
                 SecondWordToEnd = "";
             }
 
+                      
+            PlayerInputSplittedString[0] = WordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
             
-
-            WordListProcessor wordListProcessor = new WordListProcessor();
-            PlayerInputSplittedString[0] = wordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
-
+            
         }
 
+        public void CheckAndReplacePrepositions()
+        {
+            PlayerInputSplittedString = WordListProcessor.CheckPrepositionSynonyms(PlayerInputSplittedString);
+            PlayerInput = string.Join(" ", PlayerInputSplittedString);
+            IndexOfFirstSpace = PlayerInput.IndexOf(' ');
+            FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
+            SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+
+        }
     }
 }
