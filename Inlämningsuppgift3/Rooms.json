@@ -2,6 +2,7 @@
   {
     "Name": "Dungeon",
     "Description": "You are in a small dungeon cell, carved out of rock.",
+    "RoomExits": { "North" : "Drainage Room"},
     "Items": [
       {
         "Name": "Pack of bubblegum",

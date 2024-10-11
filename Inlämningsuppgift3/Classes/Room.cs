@@ -8,16 +8,18 @@ namespace Inlämningsuppgift3.Classes
 {
     public class Room : GameObject
     {
-        public List<Items> Items { get; set; } = new List<Items>();
-        public List<RoomExits> RoomExits { get; set; } = new List<RoomExits>();
+        public List<Items> Items { get; set; }
+        public Dictionary<string, string> RoomExits { get; set; }
 
-        public List<RoomObjectOfInterest> RoomObjectOfInterest { get; set; } = new List<RoomObjectOfInterest>();
+        public List<RoomObjectOfInterest> RoomObjectOfInterest { get; set; }
 
         public Room()
         {
-            
+            Items = new List<Items>();
 
+            RoomExits = new Dictionary<string, string>();
 
+            RoomObjectOfInterest = new List<RoomObjectOfInterest>();
 
         }
 
