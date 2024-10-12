@@ -1,36 +1,14 @@
 [
   {
     "Name": "Dungeon",
-    "Description": "You are in a small dungeon cell, carved out of rock.",
-    "RoomExits": [ { "Direction": "North", "Connection" : "Drainage Room", "IsLocked" : true } ],
+    "Description": "You are in a small dungeon cell.",
+    "RoomExits": [ { "Name":"Dungeon door","Description": "A thick iron door", "Direction": "North", "Connection" : "Drainage Room", "IsLocked" : true } ],
 
     "Items": [
       {
         "Name": "Pack of bubblegum",
         "Synonyms": ["bubblegum", "gum"],
-        "Description": "A pack of bubblegum. The name of the brand is \"Hubbabubba\".",
-        "Container": [
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          }
-        ]
+        "Description": "A pack of bubblegum. The brand name is \"Hubbabubba\". A classic from your childhood."
       },
       {
         "Name": "Rusty key",

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Inlämningsuppgift3.Classes
 {
-    public class RoomExit
+    public class RoomExit : GameObject
     {
         public string Direction { get; set; }
 

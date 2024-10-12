@@ -74,7 +74,7 @@ namespace Inlämningsuppgift3.Classes
                         break;
 
                     case ("use"):
-                        Player.Use(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+                        Player.Use(InputProcessor.PlayerInput, InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
 
                         break;
 

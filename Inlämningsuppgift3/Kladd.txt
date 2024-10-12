@@ -19,7 +19,7 @@ namespace Inlämningsuppgift3.Classes
 
 
         public GameInterface()
-     
+
         {
             GameRunning = true;
             Player = new Player();
@@ -29,10 +29,10 @@ namespace Inlämningsuppgift3.Classes
             Player.Location = Rooms[0];
 
         }
-              
+
         public void Game()
         {
-            string playerInput;                                                                               
+            string playerInput;
             bool newLocation = true;
 
             while (GameRunning)
@@ -47,6 +47,7 @@ namespace Inlämningsuppgift3.Classes
 
                 Console.WriteLine();
                 playerInput = Console.ReadLine();
+
                 InputProcessor.Process(playerInput);
 
                 switch (InputProcessor.PlayerInputSplittedString[0])
@@ -54,41 +55,13 @@ namespace Inlämningsuppgift3.Classes
                     case (null):
                     case (""):
 
-                        Console.WriteLine("Type a command:");
+                        Console.WriteLine("Write a command.");
                         break;
 
                     case ("look"):
 
-                        if (InputProcessor.PlayerInputSplittedString.Length == 1)
-                        {
-
-                            Console.WriteLine(Player.Location.Description);
-                            Console.WriteLine(Player.Location.RoomContainsDescription());
-                            break;
-                        }
-                        else
-                        {
-
-                            foreach (Item item in Player.Location.Items)
-                            {
-                                if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
-                                {
-                                    Console.WriteLine(item.Description);
-                                    
-                                }
-                            }
-                            foreach (Item item in Player.Inventory)
-                            {
-                                if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
-                                {
-                                    Console.WriteLine($"{item.Description} [in inventory]");
-                                    
-                                }
-                            }
-                        }
+                        Player.Look(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
                         break;
-                        
-
 
                     case ("inventory"):
                     case ("open inventory"):
@@ -99,75 +72,30 @@ namespace Inlämningsuppgift3.Classes
 
                         newLocation = Player.Move(InputProcessor.PlayerInputSplittedString[1], Rooms);
                         break;
-                        
 
+                    case ("use"):
+                        Player.Use(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
 
+                        break;
 
-                }
+                    case ("take"):
+                        Player.Take(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
 
-                
-                
-                if (InputProcessor.PlayerInputSplittedString[0].ToLower() == "take" && InputProcessor.PlayerInputSplittedString.Length > 1)
-                {
-                    foreach (Item item in Player.Location.Items)
-                    {
-                        if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
-                        {
-                            Player.Location.Items.Remove(item);
-                            Player.Inventory.Add(item);
-                            Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
-                            break;
-                        }
-                    }
+                        break;
 
-                }
+                    case ("drop"):
+                        Player.Drop(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
 
-                if (InputProcessor.PlayerInputSplittedString[0].ToLower() == "drop" && InputProcessor.PlayerInputSplittedString.Length > 1)
-                {
+                        break;
 
-                    foreach (Item item in Player.Inventory)
-                    {
-                        if (item.Name.ToLower() == InputProcessor.SecondWordToEnd.ToLower())
-                        {
-                            Player.Location.Items.Add(item);
-                            Player.Inventory.Remove(item);
-                            Console.WriteLine($"You drop the {item.Name.ToLower()}.");
-
-                            break;
-                        }
-                    }
-
+                    default:
+                        Console.WriteLine($"I don't know the word \"{InputProcessor.PlayerInputSplittedString[0]}\".");
+                        break;
 
 
                 }
-
 
             }
-
-
-
-        }
-        
-        public void InventoryOpened()
-        {
-
-
-
-        }
-        
-        public void InitializeGame()
-        {
-
-
-        }
-
-
-        public void Look(Player player)
-        {
-
-
-
-
 
         }
 
@@ -215,20 +143,24 @@ namespace Inlämningsuppgift3.Classes
         public string FirstWord { get; set; }
         public string SecondWordToEnd { get; set; }
 
+        public WordListProcessor WordListProcessor { get; set; }
+
         public InputProcessor()
         {
-            
+            WordListProcessor = new WordListProcessor();
         }
         public void Process(string playerInput)
         {
-            PlayerInput = playerInput;
-            PlayerInputSplittedString = playerInput.Split(" ");
+ 
+            PlayerInput = playerInput.ToLower();
+            PlayerInputSplittedString = PlayerInput.Split(" ");
 
             if (PlayerInputSplittedString.Length > 1)
             {
-                IndexOfFirstSpace = playerInput.IndexOf(' ');
-                FirstWord = playerInput.Substring(0, IndexOfFirstSpace);
-                SecondWordToEnd = playerInput.Substring(IndexOfFirstSpace + 1);
+                IndexOfFirstSpace = PlayerInput.IndexOf(' ');
+                FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
+                SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+                CheckAndReplacePrepositions();
 
             }
             else
@@ -238,11 +170,21 @@ namespace Inlämningsuppgift3.Classes
                 SecondWordToEnd = "";
             }
 
-            WordListProcessor wordListProcessor = new WordListProcessor();
-            PlayerInputSplittedString[0] = wordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
-
+                      
+            PlayerInputSplittedString[0] = WordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
+            
+            
         }
 
+        public void CheckAndReplacePrepositions()
+        {
+            PlayerInputSplittedString = WordListProcessor.CheckPrepositionSynonyms(PlayerInputSplittedString);
+            PlayerInput = string.Join(" ", PlayerInputSplittedString);
+            IndexOfFirstSpace = PlayerInput.IndexOf(' ');
+            FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
+            SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+
+        }
     }
 }
 using System;
@@ -303,14 +245,11 @@ namespace Inlämningsuppgift3.Classes
             
         }
 
-
         public void ShowInventory()
         {
-
-
             if (Inventory.Count == 0)
             {
-                Console.WriteLine("You have no items in your inventory");
+                Console.WriteLine("You have no items in your inventory.");
             }
             else
             {
@@ -321,7 +260,37 @@ namespace Inlämningsuppgift3.Classes
                 {
                     Console.WriteLine(item.Name);
                 }
+            }
+        }
 
+        public void Look(string secondWordToEnd, string[] splittedString)
+        {
+            if (splittedString.Length == 1)
+            {
+
+                Console.WriteLine(Location.Description);
+                Console.WriteLine(Location.RoomContainsDescription());
+                
+            }
+            else
+            {
+
+                foreach (Item item in Location.Items)
+                {
+                    if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                    {
+                        Console.WriteLine(item.Description);
+
+                    }
+                }
+                foreach (Item item in Inventory)
+                {
+                    if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                    {
+                        Console.WriteLine($"{item.Description} [in inventory]");
+
+                    }
+                }
             }
 
         }
@@ -350,29 +319,122 @@ namespace Inlämningsuppgift3.Classes
 
                     }
                 }
-
             }
 
             if (hasMoved)
             {
                 return true;
-
             }
             else
             {
                 Console.WriteLine("You can't move in that direction.");
                 return false;
             }
+        }
+
+        public void Use(string secondWordToEnd, string[] splittedString)
+        {
+            if (splittedString.Length > 1)
+            {
+                if (secondWordToEnd.Contains("on"))
+                {
+                    for (int i = 0; i < splittedString.Length; i++)
+                    {
+                        if (splittedString[i] == "on")
+                        {
+                            string item1 = splittedString[i - 1];
+                            string item2 = splittedString[i + 1];
+
+                            this.Combination(item1, item2);
+
+                        }
+
+                    }
+
+                }
+                else
+                {
+                    if (secondWordToEnd == "pack of bubblegum" || secondWordToEnd == "gum")
+                    {
+
+                        foreach (Item item in Location.Items)
+                        {
+                            if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                            {                               
+
+                            }
+                        }
+                        foreach (Item item in Inventory)
+                        {
+                            if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                            {
+                         
+
+                            }
+                        }
+                    }
+
+                }
+                
+
+            }
+            else
+            {
+                Console.WriteLine("What do you want to 'use'?");
+            }
 
         }
 
-        public void Use()
+        public void Combination(string item1, string item2)
         {
-            
+
+            Console.WriteLine("kombination");
 
 
 
 
+        }
+        public void Take(string takenObject, string[] splittedString)
+        {
+            if (splittedString.Length > 1)
+            {
+                foreach (Item item in Location.Items)
+                {
+                    if (item.Name.ToLower() == takenObject.ToLower())
+                    {
+                        Location.Items.Remove(item);
+                        Inventory.Add(item);
+                        Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("What do you want to 'take'?");
+            }
+        }
+
+        public void Drop(string droppedObject, string[] splittedString)
+        {
+            if (splittedString.Length > 1)
+            {
+
+                foreach (Item item in Inventory)
+                {
+                    if (item.Name.ToLower() == droppedObject.ToLower())
+                    {
+                        Location.Items.Add(item);
+                        Inventory.Remove(item);
+                        Console.WriteLine($"You drop the {item.Name.ToLower()}.");
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("What do you want to 'drop'?");
+            }
         }
     }
 }
@@ -401,7 +463,7 @@ namespace Inlämningsuppgift3.Classes
             return rooms;
         }
 
-        public static Dictionary<string, string[]> LoadWordList()
+        public static Dictionary<string, string[]> LoadActionWordList()
         {
             Dictionary<string, string[]> wordList = new Dictionary<string, string[]>();
 
@@ -414,6 +476,21 @@ namespace Inlämningsuppgift3.Classes
 
             return wordList;
 
+        }
+
+        public static string[] LoadPrepositionWordList()
+        {
+            string[] wordList;
+
+            using (StreamReader reader = new StreamReader("D:\\repos\\Inlämningsuppgift3\\Inlämningsuppgift3\\WordList_Prepositions.json"))
+            {
+                string stringWordList = reader.ReadToEnd();
+                wordList = JsonSerializer.Deserialize<string[]>(stringWordList);
+
+            }
+
+
+            return wordList;
         }
 
     }
@@ -514,6 +591,7 @@ namespace Inlämningsuppgift3.Classes
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -521,29 +599,30 @@ namespace Inlämningsuppgift3.Classes
 {
     public class WordListProcessor
     {
-        public Dictionary<string, string[]> WordList;
+        public Dictionary<string, string[]> ActionWordList;
+        public string[] PrepositionWordList;
 
         public WordListProcessor()
         {
-            WordList = Repository.LoadWordList();
+            ActionWordList = Repository.LoadActionWordList();
+            PrepositionWordList = Repository.LoadPrepositionWordList();
         }
 
         public string CheckActionSynonyms(string word)
         {
 
             //common words check
-            foreach (string key in WordList.Keys)
+            foreach (string key in ActionWordList.Keys)
             {
                 if (word == key)
                 {
                     return word;
 
                 }
-
             }
 
             //synonyms check
-            foreach (KeyValuePair<string,string[]> pair in WordList)
+            foreach (KeyValuePair<string,string[]> pair in ActionWordList)
             {
                 foreach(string synonym in pair.Value)
                 {
@@ -552,22 +631,39 @@ namespace Inlämningsuppgift3.Classes
                         return pair.Key;
 
                     }
-                   
+                  
                 }
 
+            }
+            return word;
+        }
 
+        public string[] CheckPrepositionSynonyms(string[] playerInputSplittedString)
+        {
+            string[] returnArray = playerInputSplittedString;
+
+            for(int i = 0; i< playerInputSplittedString.Length; i++)
+            {
+                for(int i2 = 0; i2 < PrepositionWordList.Length; i2++)
+                {
+                    if (playerInputSplittedString[i] == PrepositionWordList[i2])
+                    {
+                        returnArray[i] = "on";
+
+                    }
+                }
             }
 
-            return word;
-
+            return returnArray;
         }
-    
-
-
-
 
     }
 }
+
+JSON files:
+
+Rooms.json:
+
 [
   {
     "Name": "Dungeon",
@@ -578,29 +674,7 @@ namespace Inlämningsuppgift3.Classes
       {
         "Name": "Pack of bubblegum",
         "Synonyms": ["bubblegum", "gum"],
-        "Description": "A pack of bubblegum. The name of the brand is \"Hubbabubba\".",
-        "Container": [
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          }
-        ]
+        "Description": "A pack of bubblegum. The name of the brand is \"Hubbabubba\"."
       },
       {
         "Name": "Rusty key",
@@ -660,6 +734,9 @@ namespace Inlämningsuppgift3.Classes
     ]
   }
 ]
+
+WordList_ActionSynonyms.json:
+
 {
   "look": [ "check", "examine", "watch", "inspect" ],
   "go": [ "walk", "move", "proceed" ],
@@ -669,8 +746,10 @@ namespace Inlämningsuppgift3.Classes
   "drop": ["throw", "discard"]
 
 }
-[
-  [ "on", "with", "and" ]
 
-]
+WordList_Prepositions.json:
+
+[ "on", "with", "and" ]
+
+
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -17,13 +18,13 @@ namespace Inlämningsuppgift3.Classes
 
         public Player()
         {
-               //loadStartingItems()
+            //loadStartingItems()
         }
+
         public void DropItem(Item item)
         {
             Location.Items.Add(item);
             Inventory.Remove(item);
-            
         }
 
         public void ShowInventory()
@@ -34,7 +35,6 @@ namespace Inlämningsuppgift3.Classes
             }
             else
             {
-
                 Console.WriteLine($"Inventory:");
 
                 foreach (Item item in Inventory)
@@ -48,56 +48,48 @@ namespace Inlämningsuppgift3.Classes
         {
             if (splittedString.Length == 1)
             {
-
                 Console.WriteLine(Location.Description);
                 Console.WriteLine(Location.RoomContainsDescription());
-                
             }
             else
             {
-
                 foreach (Item item in Location.Items)
                 {
                     if (item.Name.ToLower() == secondWordToEnd.ToLower())
                     {
                         Console.WriteLine(item.Description);
-
                     }
                 }
+
                 foreach (Item item in Inventory)
                 {
                     if (item.Name.ToLower() == secondWordToEnd.ToLower())
                     {
                         Console.WriteLine($"{item.Description} [in inventory]");
-
                     }
                 }
             }
-
         }
 
-        public bool Move(string direction, List <Room> roomList)
+        public bool Move(string direction, List<Room> roomList)
         {
-
             bool hasMoved = false;
 
-            foreach(RoomExit roomexit in Location.RoomExits)
+            foreach (RoomExit roomexit in Location.RoomExits)
             {
                 string newLocation = "";
 
                 if (direction.ToLower() == roomexit.Direction.ToLower())
                 {
                     newLocation = roomexit.Connection;
-
                 }
 
-                foreach(Room room in roomList)
+                foreach (Room room in roomList)
                 {
                     if (newLocation == room.Name)
                     {
                         Location = room;
                         hasMoved = true;
-
                     }
                 }
             }
@@ -113,68 +105,57 @@ namespace Inlämningsuppgift3.Classes
             }
         }
 
-        public void Use(string secondWordToEnd, string[] splittedString)
+        public void Use(string playerInput, string secondWordToEnd, string[] splittedString)
         {
             if (splittedString.Length > 1)
             {
                 if (secondWordToEnd.Contains("on"))
                 {
-                    for (int i = 0; i < splittedString.Length; i++)
+                    
+                    int indexBeforeOn = secondWordToEnd.IndexOf("on");
+                    string firstItem = secondWordToEnd.Substring(0, indexBeforeOn-1);
+                    string secondItem = secondWordToEnd.Substring(indexBeforeOn + "on".Length+1);
+                    
+                    
+
+                    Item? foundObject1 = Location.Items.FirstOrDefault(i => i.Name.ToLower() == firstItem) ??
+                                            Inventory.FirstOrDefault(i => i.Name.ToLower() == firstItem);
+
+                    Item? foundObject2 = Location.Items.FirstOrDefault(i => i.Name.ToLower() == secondItem) ??
+                                            Inventory.FirstOrDefault(i => i.Name.ToLower() == secondItem);
+
+                    if (foundObject1 != null && foundObject2 == null)
                     {
-                        if (splittedString[i] == "on")
-                        {
-                            string item1 = splittedString[i - 1];
-                            string item2 = splittedString[i + 1];
+                        RoomExit? foundRoomExit = Location.RoomExits.FirstOrDefault(i => i.Name.ToLower() == secondItem);
 
-                            this.Combination(item1, item2);
-
-                        }
-
+                        foundObject1.Combination(foundRoomExit);
                     }
-
+                    else if(foundObject1 != null)
+                    {
+                        foundObject1.Combination(foundObject2);
+                    }
                 }
                 else
                 {
-                    if (secondWordToEnd == "pack of bubblegum" || secondWordToEnd == "gum")
+                    Item? foundObject = Location.Items.FirstOrDefault(i => i.Name.ToLower() == secondWordToEnd) ??
+                                            Inventory.FirstOrDefault(i => i.Name.ToLower() == secondWordToEnd);
+
+                    if (foundObject != null)
                     {
-
-                        foreach (Item item in Location.Items)
-                        {
-                            if (item.Name.ToLower() == secondWordToEnd.ToLower())
-                            {                               
-
-                            }
-                        }
-                        foreach (Item item in Inventory)
-                        {
-                            if (item.Name.ToLower() == secondWordToEnd.ToLower())
-                            {
-                         
-
-                            }
-                        }
+                        foundObject.Use(splittedString, Inventory);
                     }
-
+                    else
+                    {
+                        Console.WriteLine($"I don't know what '{secondWordToEnd}' is.");
+                    }
                 }
-                
-
             }
             else
             {
                 Console.WriteLine("What do you want to 'use'?");
             }
-
         }
 
-        public void Combination(string item1, string item2)
-        {
-
-            Console.WriteLine("kombination");
-
-
-
-
-        }
         public void Take(string takenObject, string[] splittedString)
         {
             if (splittedString.Length > 1)
@@ -200,7 +181,6 @@ namespace Inlämningsuppgift3.Classes
         {
             if (splittedString.Length > 1)
             {
-
                 foreach (Item item in Inventory)
                 {
                     if (item.Name.ToLower() == droppedObject.ToLower())
