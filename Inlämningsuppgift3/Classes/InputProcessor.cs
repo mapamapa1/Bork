@@ -15,33 +15,47 @@ namespace Inlämningsuppgift3.Classes
         public string FirstWord { get; set; }
         public string SecondWordToEnd { get; set; }
 
+        public WordListProcessor WordListProcessor { get; set; }
+
         public InputProcessor()
         {
-            
+            WordListProcessor = new WordListProcessor();
         }
         public void Process(string playerInput)
         {
-            PlayerInput = playerInput;
-            PlayerInputSplittedString = playerInput.Split(" ");
+ 
+            PlayerInput = playerInput.ToLower();
+            PlayerInputSplittedString = PlayerInput.Split(" ");
 
             if (PlayerInputSplittedString.Length > 1)
             {
-                IndexOfFirstSpace = playerInput.IndexOf(' ');
-                FirstWord = playerInput.Substring(0, IndexOfFirstSpace);
-                SecondWordToEnd = playerInput.Substring(IndexOfFirstSpace + 1);
+                IndexOfFirstSpace = PlayerInput.IndexOf(' ');
+                FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
+                SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+                CheckAndReplacePrepositions();
 
             }
             else
             {
                 IndexOfFirstSpace = -1;
-                FirstWord = null;
-                SecondWordToEnd = null;
+                FirstWord = "";
+                SecondWordToEnd = "";
             }
 
-            WordListProcessor wordListProcessor = new WordListProcessor();
-            PlayerInputSplittedString[0] = wordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
-
+                      
+            PlayerInputSplittedString[0] = WordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
+            
+            
         }
 
+        public void CheckAndReplacePrepositions()
+        {
+            PlayerInputSplittedString = WordListProcessor.CheckPrepositionSynonyms(PlayerInputSplittedString);
+            PlayerInput = string.Join(" ", PlayerInputSplittedString);
+            IndexOfFirstSpace = PlayerInput.IndexOf(' ');
+            FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
+            SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+
+        }
     }
 }

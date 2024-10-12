@@ -19,7 +19,7 @@ namespace Inlämningsuppgift3.Classes
 
 
         public GameInterface()
-     
+
         {
             GameRunning = true;
             Player = new Player();
@@ -29,16 +29,10 @@ namespace Inlämningsuppgift3.Classes
             Player.Location = Rooms[0];
 
         }
-        
-        
-        
+
         public void Game()
         {
             string playerInput;
-            string[] playerInputSplittedString;
-            int indexOfFirstSpace;
-            string firstWord;
-            string secondWordToEnd;                                                                                     
             bool newLocation = true;
 
             while (GameRunning)
@@ -53,166 +47,55 @@ namespace Inlämningsuppgift3.Classes
 
                 Console.WriteLine();
                 playerInput = Console.ReadLine();
+
                 InputProcessor.Process(playerInput);
 
-                playerInputSplittedString = playerInput.Split(" ");
-
-                
-
-                if (playerInputSplittedString.Length > 1)
-                {
-                    indexOfFirstSpace = playerInput.IndexOf(' ');
-                    firstWord = playerInput.Substring(0, indexOfFirstSpace);
-                    secondWordToEnd = playerInput.Substring(indexOfFirstSpace + 1);
-
-                }
-                else
-                {
-                    indexOfFirstSpace = -1;
-                    firstWord = null;
-                    secondWordToEnd = null;
-                }
-
-                playerInputSplittedString[0] = WordListProcessor.CheckActionSynonyms(playerInputSplittedString[0]);
-
-                switch (playerInputSplittedString[0])
+                switch (InputProcessor.PlayerInputSplittedString[0])
                 {
                     case (null):
                     case (""):
 
-                        Console.WriteLine("Type a command:");
+                        Console.WriteLine("Write a command.");
                         break;
 
                     case ("look"):
 
-                        if (playerInputSplittedString.Length == 0)
-                        {
-
-                            Console.WriteLine(Player.Location.Description);
-                            Console.WriteLine(Player.Location.RoomContainsDescription());
-                            break;
-                        }
-                        else
-                        {
-
-                            foreach (Items item in Player.Location.Items)
-                            {
-                                if (item.Name.ToLower() == secondWordToEnd.ToLower())
-                                {
-                                    Console.WriteLine(item.Description);
-                                    
-                                }
-                            }
-                            foreach (Items item in Player.Inventory)
-                            {
-                                if (item.Name.ToLower() == secondWordToEnd.ToLower())
-                                {
-                                    Console.WriteLine($"{item.Description} [in inventory]");
-                                    
-                                }
-                            }
-                        }
+                        Player.Look(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
                         break;
-                        
-
 
                     case ("inventory"):
                     case ("open inventory"):
-                        ShowInventory(Player);
+                        Player.ShowInventory();
                         break;
 
-                    //case ("go"):
+                    case ("go"):
 
-                        
+                        newLocation = Player.Move(InputProcessor.PlayerInputSplittedString[1], Rooms);
+                        break;
 
+                    case ("use"):
+                        Player.Use(InputProcessor.PlayerInput, InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
 
+                        break;
 
-                }
+                    case ("take"):
+                        Player.Take(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
 
-                
-                
-                if (playerInputSplittedString[0].ToLower() == "take" && playerInputSplittedString.Length > 1)
-                {
-                    foreach (Items item in Player.Location.Items)
-                    {
-                        if (item.Name.ToLower() == secondWordToEnd.ToLower())
-                        {
-                            Player.Location.Items.Remove(item);
-                            Player.Inventory.Add(item);
-                            Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
-                            break;
-                        }
-                    }
+                        break;
 
-                }
+                    case ("drop"):
+                        Player.Drop(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
 
-                if (playerInputSplittedString[0].ToLower() == "drop" && playerInputSplittedString.Length > 1)
-                {
+                        break;
 
-                    foreach (Items item in Player.Inventory)
-                    {
-                        if (item.Name.ToLower() == secondWordToEnd.ToLower())
-                        {
-                            Player.Location.Items.Add(item);
-                            Player.Inventory.Remove(item);
-                            Console.WriteLine($"You drop the {item.Name.ToLower()}.");
-
-                            break;
-                        }
-                    }
+                    default:
+                        Console.WriteLine($"I don't know the word \"{InputProcessor.PlayerInputSplittedString[0]}\".");
+                        break;
 
 
-
-                }
-
-
-            }
-
-
-
-        }
-        
-        public void InventoryOpened()
-        {
-
-
-
-        }
-        
-        public void InitializeGame()
-        {
-
-
-        }
-
-        public void ShowInventory(Player player)
-        {
-           
-
-            if (player.Inventory.Count == 0)
-            {
-                Console.WriteLine("You have no items in your inventory");
-            }
-            else
-            {
-
-                Console.WriteLine($"Inventory:");
-
-                foreach (Items item in Player.Inventory)
-                {
-                    Console.WriteLine(item.Name);
                 }
 
             }
-
-        }
-
-        public void Look(Player player)
-        {
-
-
-
-
 
         }
 

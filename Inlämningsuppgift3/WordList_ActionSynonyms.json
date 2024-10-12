@@ -1,7 +1,7 @@
 {
   "look": [ "check", "examine", "watch", "inspect" ],
   "go": [ "walk", "move", "proceed" ],
-  "take": [ "grab", "pick up", "pick", "snatch" ],
+  "take": [ "grab", "pick up", "pick", "snatch", "get" ],
   "use": [],
   "open": [],
   "drop": ["throw", "discard"]

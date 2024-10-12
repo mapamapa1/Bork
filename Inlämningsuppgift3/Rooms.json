@@ -1,44 +1,14 @@
 [
   {
     "Name": "Dungeon",
-    "Description": "You are in a small dungeon cell, carved out of rock.",
-    "RoomExits": [
-      {
-        "ExitConnection": [
-          { "North": "Drainage Room" }
-        ],
-        "IsDoor": true,
-        "IsOpen": false,
-        "IsLocked": true
-      }
-    ],
+    "Description": "You are in a small dungeon cell.",
+    "RoomExits": [ { "Name":"Dungeon door","Description": "A thick iron door", "Direction": "North", "Connection" : "Drainage Room", "IsLocked" : true } ],
+
     "Items": [
       {
         "Name": "Pack of bubblegum",
         "Synonyms": ["bubblegum", "gum"],
-        "Description": "A pack of bubblegum. The name of the brand is \"Hubbabubba\".",
-        "Container": [
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          },
-          {
-            "Name": "A piece of gum",
-            "Description": "One bite-sized piece of gum from the popular bubblegum brand Hubbabubba"
-          }
-        ]
+        "Description": "A pack of bubblegum. The brand name is \"Hubbabubba\". A classic from your childhood."
       },
       {
         "Name": "Rusty key",
@@ -50,6 +20,12 @@
   {
     "Name": "Oak Room",
     "Description": "You are in a large circular room, in the middle of the room there is a patch of dirt, and on it stands a large oak tree, far above the oak in the ceiling there is a small opening with a faint blue light",
+    "RoomExits": [
+      {
+        "Direction": "East",
+        "Connection": "Drainage Room"
+      }
+    ],
     "Items": [
       {
         "Name": "Stick",
@@ -74,6 +50,16 @@
   {
     "Name": "Drainage Room",
     "Description": "You are in some sort of drainage room, the floor slopes towards the center of the room where there is a grated drain in the floor that collects water from the other rooms.",
+    "RoomExits": [
+      {
+        "Direction": "West",
+        "Connection": "Oak Room"
+      },
+      {
+        "Direction": "South",
+        "Connection":  "Dungeon"
+      }
+    ],
     "RoomObjectOfInterest": [
       {
         "Name": "Drain",
