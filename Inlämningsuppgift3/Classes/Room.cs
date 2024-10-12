@@ -41,6 +41,24 @@ namespace Inlämningsuppgift3.Classes
 
         }
 
+        public string RoomExitsDescription()
+        {
+            string returnString = "";
+
+            foreach (RoomExit roomExit in RoomExits)
+            {
+                string openClose = (roomExit.IsLocked) ? "closed" : "open";
+
+                returnString += ($"On the {roomExit.Direction.ToLower()} wall there is a {roomExit.Name.ToLower()}. It is {openClose}.\n");
+
+            }
+
+
+
+            return returnString;
+
+        }
+
 
 
 

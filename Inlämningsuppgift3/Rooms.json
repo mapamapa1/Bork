@@ -2,28 +2,41 @@
   {
     "Name": "Dungeon",
     "Description": "You are in a small dungeon cell.",
-    "RoomExits": [ { "Name":"Dungeon door","Description": "A thick iron door", "Direction": "North", "Connection" : "Drainage Room", "IsLocked" : true } ],
+    "RoomExits": [
+      {
+        "Name": "Iron door",
+        "Description": "A thick iron door",
+        "Synonyms": [ "door" ],
+        "Direction": "North",
+        "Connection": "Drainage Room",
+        "IsLocked": true
+      }
+    ],
 
     "Items": [
       {
         "Name": "Pack of bubblegum",
-        "Synonyms": ["bubblegum", "gum"],
+        "Synonyms": [ "bubblegum", "gum" ],
         "Description": "A pack of bubblegum. The brand name is \"Hubbabubba\". A classic from your childhood."
       },
       {
         "Name": "Rusty key",
-        "Synonyms": ["key"],
+        "Synonyms": [ "key" ],
         "Description": "An old rusty key of simple design."
       }
     ]
   },
   {
     "Name": "Oak Room",
-    "Description": "You are in a large circular room, in the middle of the room there is a patch of dirt, and on it stands a large oak tree, far above the oak in the ceiling there is a small opening with a faint blue light",
+    "Description": "You are in a large circular room, in the middle of the room there is a patch of dirt, and on it stands a large oak tree, far above the oak in the ceiling there is a small opening in the ceiling where some sun shines through",
     "RoomExits": [
       {
+        "Name": "Wooden door",
+        "Description": "A simple wooden door",
+        "Synonyms": [ "door" ],
         "Direction": "East",
-        "Connection": "Drainage Room"
+        "Connection": "Drainage Room",
+        "IsLocked" : true
       }
     ],
     "Items": [
@@ -52,12 +65,28 @@
     "Description": "You are in some sort of drainage room, the floor slopes towards the center of the room where there is a grated drain in the floor that collects water from the other rooms.",
     "RoomExits": [
       {
+        "Name": "Wooden door",
+        "Description": "A simple wooden door",
+        "Synonyms": [ "door" ],
         "Direction": "West",
-        "Connection": "Oak Room"
+        "Connection": "Oak Room",
+        "isLocked" : false
       },
       {
+        "Name": "Iron door",
+        "Description": "A thick iron door",
+        "Synonyms": [ "door" ],
         "Direction": "South",
-        "Connection":  "Dungeon"
+        "Connection": "Dungeon"
+      },
+      {
+        "Name": "Golden door",
+        "Description": "A beautiful golden door.",
+        "Synonyms": [ "door" ],
+        "Direction": "North",
+        "Connection" : "Final room",
+        "IsLocked": true
+
       }
     ],
     "RoomObjectOfInterest": [
@@ -66,5 +95,9 @@
         "Description": "A drainage hole"
       }
     ]
+  },
+  {
+    "Name": "Final room",
+    "Description": "You walk though a long tunnel sloping upwards, you see daylight in the distance. You are free."
   }
 ]

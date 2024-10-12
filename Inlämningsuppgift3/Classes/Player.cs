@@ -50,6 +50,7 @@ namespace Inlämningsuppgift3.Classes
             {
                 Console.WriteLine(Location.Description);
                 Console.WriteLine(Location.RoomContainsDescription());
+                Console.WriteLine(Location.RoomExitsDescription());
             }
             else
             {

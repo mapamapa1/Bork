@@ -12,8 +12,6 @@ namespace Inlämningsuppgift3.Classes
         public bool IsContainer { get; set; }
         public List<Item> Container { get; set; } = new List<Item>();
 
-        public string[] Synonyms { get; set; }
-
         public string ItemInEnvironmentDescription { get; set; }
 
         //public int Amount { get; set; }
@@ -66,7 +64,7 @@ namespace Inlämningsuppgift3.Classes
         //keys on doors
         public void Combination(RoomExit roomExit)
         {
-            if ((Name.ToLower() == "rusty key") && (roomExit.Name.ToLower() == "dungeon door"))
+            if ((Name.ToLower() == "rusty key") && (roomExit.Name.ToLower() == "iron door"))
             {
                 roomExit.IsLocked = false;
                 Console.WriteLine("You unlock the door and open it.");
