@@ -74,14 +74,24 @@ namespace Inlämningsuppgift3.Classes
         public bool Move(string direction, List<Room> roomList)
         {
             bool hasMoved = false;
+            string newLocation = "";
 
             foreach (RoomExit roomexit in Location.RoomExits)
             {
-                string newLocation = "";
+                
 
                 if (direction.ToLower() == roomexit.Direction.ToLower())
                 {
-                    newLocation = roomexit.Connection;
+                    if (roomexit.IsLocked == false)
+                    {
+                        newLocation = roomexit.Connection;
+                    }
+                    else
+                    {
+                        Console.WriteLine("There is a locked door blocking your path.");
+                        return false;
+                    }
+
                 }
 
                 foreach (Room room in roomList)
@@ -128,11 +138,22 @@ namespace Inlämningsuppgift3.Classes
                     {
                         RoomExit? foundRoomExit = Location.RoomExits.FirstOrDefault(i => i.Name.ToLower() == secondItem);
 
-                        foundObject1.Combination(foundRoomExit);
+                        if (foundRoomExit != null)
+                        {
+                            foundObject1.Combination(foundRoomExit);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"I don't know what '{secondItem}' is.");
+                        }
                     }
-                    else if(foundObject1 != null)
+                    else if(foundObject1 != null && foundObject2 != null)
                     {
                         foundObject1.Combination(foundObject2);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"I don't know what '{firstItem}' is.");
                     }
                 }
                 else

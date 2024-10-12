@@ -31,7 +31,7 @@ namespace Inlämningsuppgift3.Classes
 
                 case ("Pack of bubblegum"):
                     
-                    Console.WriteLine("You take a piece of gum and chew it for a while. You put the chewed gum in your inventory.");                
+                    Console.WriteLine("You take a piece of gum and chew it for a while. You put the now chewed gum in your inventory.");                
                     Item chewedGum = new Item();
                     chewedGum.Name = "Chewed gum";
                     chewedGum.Description = "A piece of chewed gum, the taste is long gone.";
@@ -69,6 +69,7 @@ namespace Inlämningsuppgift3.Classes
             if ((Name.ToLower() == "rusty key") && (roomExit.Name.ToLower() == "dungeon door"))
             {
                 roomExit.IsLocked = false;
+                Console.WriteLine("You unlock the door and open it.");
 
             }
         }
