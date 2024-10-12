@@ -72,7 +72,7 @@ namespace Inlämningsuppgift3.Classes
                 Item newItem = new Item();
                 Console.WriteLine("You put the chewed gum at the end of the stick. You have created an abomination.");
                 newItem.Name = "Chewed gum on a stick";
-                newItem.Description = "A piece of chewed gum at the end of a stick";
+                newItem.Description = "A stick with a piece of chewed gum attached to the end of it.";
                 inventory.Add(newItem);
 
             }
