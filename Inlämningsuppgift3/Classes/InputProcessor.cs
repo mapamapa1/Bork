@@ -15,6 +15,10 @@ namespace Inlämningsuppgift3.Classes
         public string FirstWord { get; set; }
         public string SecondWordToEnd { get; set; }
 
+        public string FirstItemString { get; set; }
+
+        public string SecondItemString { get; set; }
+
         public WordListProcessor WordListProcessor { get; set; }
 
         public InputProcessor()
@@ -33,6 +37,12 @@ namespace Inlämningsuppgift3.Classes
                 FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
                 SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
                 CheckAndReplacePrepositions();
+                if (SecondWordToEnd.Contains("on"))
+                {
+                    GetItemsFromInput();
+
+                }
+                
 
             }
             else
@@ -41,11 +51,9 @@ namespace Inlämningsuppgift3.Classes
                 FirstWord = "";
                 SecondWordToEnd = "";
             }
-
-                      
+                  
             PlayerInputSplittedString[0] = WordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
-            
-            
+
         }
 
         public void CheckAndReplacePrepositions()
@@ -57,5 +65,14 @@ namespace Inlämningsuppgift3.Classes
             SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
 
         }
+
+        public void GetItemsFromInput()
+        {
+            int indexBeforeOn = SecondWordToEnd.IndexOf("on");
+            FirstItemString = SecondWordToEnd.Substring(0, indexBeforeOn - 1);
+            SecondItemString = SecondWordToEnd.Substring(indexBeforeOn + "on".Length + 1);
+
+        }
+
     }
 }

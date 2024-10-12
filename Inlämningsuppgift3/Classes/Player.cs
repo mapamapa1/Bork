@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -116,19 +117,13 @@ namespace Inlämningsuppgift3.Classes
             }
         }
 
-        public void Use(string playerInput, string secondWordToEnd, string[] splittedString)
+        public void Use(string playerInput, string secondWordToEnd, string[] splittedString, string firstItem, string secondItem)
         {
             if (splittedString.Length > 1)
             {
                 if (secondWordToEnd.Contains("on"))
                 {
-                    
-                    int indexBeforeOn = secondWordToEnd.IndexOf("on");
-                    string firstItem = secondWordToEnd.Substring(0, indexBeforeOn-1);
-                    string secondItem = secondWordToEnd.Substring(indexBeforeOn + "on".Length+1);
-                    
-                    
-
+                                                                          
                     Item? foundObject1 = Location.Items.FirstOrDefault(i => i.Name.ToLower() == firstItem) ??
                                             Inventory.FirstOrDefault(i => i.Name.ToLower() == firstItem);
 
@@ -181,13 +176,17 @@ namespace Inlämningsuppgift3.Classes
         public void Open(string secondWordToEnd, string[] splittedString)
         {
 
-            int amountOfExits = 0;
-            foreach (RoomExit roomexit in Location.RoomExits)
+            int amountOfClosedExits = 0;
+            foreach (RoomExit roomExit in Location.RoomExits)
             {
-                amountOfExits += 1;
+                if (roomExit.IsClosed == true)
+                {
+                    amountOfClosedExits += 1;
+                }
+                
             }
 
-            switch (amountOfExits) {
+            switch (amountOfClosedExits) {
 
                 case 0:
                     Console.WriteLine("There is nothing to open here");
@@ -195,15 +194,15 @@ namespace Inlämningsuppgift3.Classes
 
                 case 1:
                     
-                    foreach (RoomExit roomexit in Location.RoomExits)
+                    foreach (RoomExit roomExit in Location.RoomExits)
                     {
-                        if (secondWordToEnd == roomexit.Name || secondWordToEnd == "door")
+                        if (secondWordToEnd == roomExit.Name || secondWordToEnd == "door")
                         {
-                            if (!roomexit.IsLocked) { 
-                                if (roomexit.IsClosed)
+                            if (!roomExit.IsLocked) { 
+                                if (roomExit.IsClosed)
                                 {
-                                    roomexit.IsClosed = false;
-                                    Console.WriteLine("You open the door");
+                                    roomExit.IsClosed = false;
+                                    Console.WriteLine($"You open the {roomExit.Name.ToLower()}.");
                                     break;
                                 }
                                 else
@@ -214,7 +213,7 @@ namespace Inlämningsuppgift3.Classes
                             }
                             else
                             {
-                                Console.WriteLine("The door is locked.");
+                                Console.WriteLine($"The {roomExit.Name.ToLower()} is locked.");
                                 break;
 
                             }
@@ -227,6 +226,11 @@ namespace Inlämningsuppgift3.Classes
                     break;
 
                 default:
+                    if (secondWordToEnd == "door")
+                    {
+                        Console.WriteLine("Which door do you want to open?");
+
+                    }
                     break;                     
                            
             }       

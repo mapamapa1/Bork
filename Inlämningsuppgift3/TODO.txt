@@ -3,6 +3,5 @@
 
 
 TODO: 
-synonyms for items
-open doors
+implement synonyms for items and doors
 objects of interest

@@ -86,7 +86,7 @@ namespace Inlämningsuppgift3.Classes
             if ((Name.ToLower() == "rusty key") && (roomExit.Name.ToLower() == "iron door"))
             {
                 roomExit.IsLocked = false;
-                Console.WriteLine("You unlock the door.");
+                Console.WriteLine($"You unlock the {roomExit.Name.ToLower()}.");
 
             }
         }
