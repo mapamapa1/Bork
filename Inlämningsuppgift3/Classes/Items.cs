@@ -14,6 +14,8 @@ namespace Inlämningsuppgift3.Classes
 
         public string ItemInEnvironmentDescription { get; set; }
 
+        public bool IsVisible { get; set; }
+
         //public int Amount { get; set; }
 
         public Item()
@@ -39,7 +41,7 @@ namespace Inlämningsuppgift3.Classes
 
                 case ("Chewed gum"):
 
-                    Console.WriteLine("You can't use that here");
+                    Console.WriteLine("You can't use that here.");
                     break;
 
 
@@ -51,14 +53,31 @@ namespace Inlämningsuppgift3.Classes
                     Console.WriteLine("By itself it doesn't do much.");
                     break;
 
+
             }
 
         }
 
+     
+
+
+
         //items on items
-        public void Combination(Item item2)
+        public void Combination(Item item2, List<Item> inventory)
         {
-        
+            if (((Name.ToLower() == "chewed gum") && (item2.Name.ToLower() == "stick"))|| ((Name.ToLower() == "stick") && (item2.Name.ToLower() == "chewed gum")))
+            {
+                inventory.Remove(this);
+                inventory.Remove(item2);
+                Item newItem = new Item();
+                Console.WriteLine("You put the chewed gum at the end of the stick. You have created an abomination.");
+                newItem.Name = "Chewed gum on a stick";
+                newItem.Description = "A piece of chewed gum at the end of a stick";
+                inventory.Add(newItem);
+
+            }
+
+
         }
 
         //keys on doors
@@ -67,7 +86,7 @@ namespace Inlämningsuppgift3.Classes
             if ((Name.ToLower() == "rusty key") && (roomExit.Name.ToLower() == "iron door"))
             {
                 roomExit.IsLocked = false;
-                Console.WriteLine("You unlock the door and open it.");
+                Console.WriteLine("You unlock the door.");
 
             }
         }

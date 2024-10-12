@@ -83,13 +83,13 @@ namespace Inlämningsuppgift3.Classes
 
                 if (direction.ToLower() == roomexit.Direction.ToLower())
                 {
-                    if (roomexit.IsLocked == false)
+                    if (roomexit.IsClosed == false)
                     {
                         newLocation = roomexit.Connection;
                     }
                     else
                     {
-                        Console.WriteLine("There is a locked door blocking your path.");
+                        Console.WriteLine("There is a door blocking your path.");
                         return false;
                     }
 
@@ -150,7 +150,7 @@ namespace Inlämningsuppgift3.Classes
                     }
                     else if(foundObject1 != null && foundObject2 != null)
                     {
-                        foundObject1.Combination(foundObject2);
+                        foundObject1.Combination(foundObject2, Inventory);
                     }
                     else
                     {
@@ -177,6 +177,62 @@ namespace Inlämningsuppgift3.Classes
                 Console.WriteLine("What do you want to 'use'?");
             }
         }
+
+        public void Open(string secondWordToEnd, string[] splittedString)
+        {
+
+            int amountOfExits = 0;
+            foreach (RoomExit roomexit in Location.RoomExits)
+            {
+                amountOfExits += 1;
+            }
+
+            switch (amountOfExits) {
+
+                case 0:
+                    Console.WriteLine("There is nothing to open here");
+                    break;
+
+                case 1:
+                    
+                    foreach (RoomExit roomexit in Location.RoomExits)
+                    {
+                        if (secondWordToEnd == roomexit.Name || secondWordToEnd == "door")
+                        {
+                            if (!roomexit.IsLocked) { 
+                                if (roomexit.IsClosed)
+                                {
+                                    roomexit.IsClosed = false;
+                                    Console.WriteLine("You open the door");
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("The door is already open.");
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("The door is locked.");
+                                break;
+
+                            }
+                        
+                        }
+
+
+                    }
+
+                    break;
+
+                default:
+                    break;                     
+                           
+            }       
+
+        }
+
 
         public void Take(string takenObject, string[] splittedString)
         {

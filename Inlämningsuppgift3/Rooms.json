@@ -9,7 +9,8 @@
         "Synonyms": [ "door" ],
         "Direction": "North",
         "Connection": "Drainage Room",
-        "IsLocked": true
+        "IsLocked": true,
+        "IsClosed": true
       }
     ],
 
@@ -36,7 +37,8 @@
         "Synonyms": [ "door" ],
         "Direction": "East",
         "Connection": "Drainage Room",
-        "IsLocked" : true
+        "IsLocked": false,
+        "IsClosed": true
       }
     ],
     "Items": [
@@ -70,7 +72,8 @@
         "Synonyms": [ "door" ],
         "Direction": "West",
         "Connection": "Oak Room",
-        "isLocked" : false
+        "IsLocked": false,
+        "IsClosed": true
       },
       {
         "Name": "Iron door",
@@ -85,7 +88,8 @@
         "Synonyms": [ "door" ],
         "Direction": "North",
         "Connection" : "Final room",
-        "IsLocked": true
+        "IsLocked": true,
+        "IsClosed": true
 
       }
     ],

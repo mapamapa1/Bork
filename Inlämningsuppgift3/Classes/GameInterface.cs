@@ -64,7 +64,6 @@ namespace Inlämningsuppgift3.Classes
                         break;
 
                     case ("inventory"):
-                    case ("open inventory"):
                         Player.ShowInventory();
                         break;
 
@@ -86,6 +85,11 @@ namespace Inlämningsuppgift3.Classes
                     case ("drop"):
                         Player.Drop(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
 
+                        break;
+
+                    case ("open"):
+                        Player.Open(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+                        
                         break;
 
                     default:
