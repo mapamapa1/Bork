@@ -9,7 +9,7 @@ namespace Inlämningsuppgift3.Classes
 {
     public class WordListProcessor
     {
-        public Dictionary<string, string[]> ActionWordList;
+        public Dictionary<string, string[]> ActionWordList;       
         public string[] PrepositionWordList;
 
         public WordListProcessor()
@@ -40,10 +40,8 @@ namespace Inlämningsuppgift3.Classes
                     {
                         return pair.Key;
 
-                    }
-                  
+                    }          
                 }
-
             }
             return word;
         }
@@ -66,6 +64,5 @@ namespace Inlämningsuppgift3.Classes
 
             return returnArray;
         }
-
     }
 }

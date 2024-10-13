@@ -15,10 +15,5 @@ namespace Inlämningsuppgift3.Classes
         {
             HasBeenInspected = false;
         }
-
     }
-
-    
-
-
 }

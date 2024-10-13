@@ -10,7 +10,6 @@ namespace Inlämningsuppgift3.Classes
     {
         public List<Item> Items { get; set; }
         public List<RoomExit> RoomExits { get; set; }
-
         public List<RoomObjectOfInterest> RoomObjectOfInterest { get; set; }
 
         public Room()
@@ -48,11 +47,7 @@ namespace Inlämningsuppgift3.Classes
                         returnString += (item.InEnvironmentDescription);
 
                     }
-
-
-
                 }
-
             }
             return returnString;
 
@@ -69,16 +64,9 @@ namespace Inlämningsuppgift3.Classes
                 returnString += ($"On the {roomExit.Direction.ToLower()} wall there is a {roomExit.Name.ToLower()}. It is {openClose}.\n");
 
             }
-
-
-
+    
             return returnString;
 
         }
-
-
-
-
-
     }
 }

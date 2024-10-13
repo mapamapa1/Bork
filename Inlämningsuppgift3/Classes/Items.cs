@@ -8,24 +8,16 @@ namespace Inlämningsuppgift3.Classes
 {
     public class Item : GameObject
     {
-
         public bool IsContainer { get; set; }
         public List<Item> Container { get; set; } = new List<Item>();
-
         public string InEnvironmentDescription { get; set; }
-
         public bool IsVisible { get; set; }
-
         public bool CanBeTaken { get; set; }
-
         public string CantBeTakenDescription { get; set; }
-
-        //public int Amount { get; set; }
 
         public Item()
         {
-       
-
+      
         }
 
         public void Use(string[] splittedString, List<Item> inventory)
@@ -61,14 +53,8 @@ namespace Inlämningsuppgift3.Classes
                     Console.WriteLine("By itself it doesn't do much.");
                     break;
 
-
             }
-
         }
-
-     
-
-
 
         //items on items
         public void Combination(Item item2, List<Item> inventory, List<Item> locationItems)
@@ -100,11 +86,7 @@ namespace Inlämningsuppgift3.Classes
                 newItem.Name = "Golden key";
                 newItem.Description = "A shining golden key that probably fits an equally shining door.";
                 inventory.Add(newItem);
-
             }
-
-
-
         }
 
         //keys on doors
@@ -128,11 +110,7 @@ namespace Inlämningsuppgift3.Classes
 
             }
             
-            Console.WriteLine("That doesn't work.");
-            
+            Console.WriteLine("That doesn't work.");           
         }
-
     }
-
-
 }

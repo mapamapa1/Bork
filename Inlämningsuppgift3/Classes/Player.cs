@@ -14,7 +14,6 @@ namespace Inlämningsuppgift3.Classes
     {
         public string Name { get; set; }
         public List<Item> Inventory { get; set; } = new List<Item>();
-
         public Room Location { get; set; }
 
         public Player()
@@ -79,26 +78,19 @@ namespace Inlämningsuppgift3.Classes
                     }
                 }
 
-
                 foreach (RoomObjectOfInterest objectOfInterest in Location.RoomObjectOfInterest)
                 {
                     if (objectOfInterest.Name.ToLower() == secondWordToEnd.ToLower())
                     {
                         Console.WriteLine(objectOfInterest.Description);
                         objectOfInterest.HasBeenInspected = true;
-                        
 
-                        foreach(Item item in Location.Items)
+                        foreach (Item item in Location.Items)
                         {
                             item.IsVisible = true;
-
                         }
                     }
-
-
-
                 }
-
             }
         }
 
@@ -111,13 +103,10 @@ namespace Inlämningsuppgift3.Classes
             {
                 Console.WriteLine("Where do you want to 'move'?");
                 return false;
-
             }
 
             foreach (RoomExit roomexit in Location.RoomExits)
             {
-                
-
                 if (direction.ToLower() == roomexit.Direction.ToLower())
                 {
                     if (roomexit.IsClosed == false)
@@ -129,7 +118,6 @@ namespace Inlämningsuppgift3.Classes
                         Console.WriteLine("There is a door blocking your path.");
                         return false;
                     }
-
                 }
 
                 foreach (Room room in roomList)
@@ -159,12 +147,11 @@ namespace Inlämningsuppgift3.Classes
             {
                 if (secondWordToEnd.Contains(" on "))
                 {
-                                                                          
                     Item? foundObject1 = Location.Items.FirstOrDefault(i => i.Name.ToLower() == firstItem) ??
-                                            Inventory.FirstOrDefault(i => i.Name.ToLower() == firstItem);
+                                          Inventory.FirstOrDefault(i => i.Name.ToLower() == firstItem);
 
                     Item? foundObject2 = Location.Items.FirstOrDefault(i => i.Name.ToLower() == secondItem) ??
-                                            Inventory.FirstOrDefault(i => i.Name.ToLower() == secondItem);
+                                          Inventory.FirstOrDefault(i => i.Name.ToLower() == secondItem);
 
                     if (foundObject1 != null && foundObject2 == null)
                     {
@@ -179,7 +166,7 @@ namespace Inlämningsuppgift3.Classes
                             Console.WriteLine($"I don't know what '{secondItem}' is.");
                         }
                     }
-                    else if(foundObject1 != null && foundObject2 != null)
+                    else if (foundObject1 != null && foundObject2 != null)
                     {
                         foundObject1.Combination(foundObject2, Inventory, Location.Items);
                     }
@@ -191,7 +178,7 @@ namespace Inlämningsuppgift3.Classes
                 else
                 {
                     Item? foundObject = Location.Items.FirstOrDefault(i => i.Name.ToLower() == secondWordToEnd) ??
-                                            Inventory.FirstOrDefault(i => i.Name.ToLower() == secondWordToEnd);
+                                          Inventory.FirstOrDefault(i => i.Name.ToLower() == secondWordToEnd);
 
                     if (foundObject != null)
                     {
@@ -211,13 +198,10 @@ namespace Inlämningsuppgift3.Classes
 
         public void Open(string secondWordToEnd, string[] splittedString)
         {
-
-            if (secondWordToEnd == "")         
+            if (secondWordToEnd == "")
             {
                 Console.WriteLine("What do you want to 'open'?");
-
             }
-
 
             int amountOfClosedExits = 0;
             foreach (RoomExit roomExit in Location.RoomExits)
@@ -226,22 +210,21 @@ namespace Inlämningsuppgift3.Classes
                 {
                     amountOfClosedExits += 1;
                 }
-                
             }
 
-            switch (amountOfClosedExits) {
-
+            switch (amountOfClosedExits)
+            {
                 case 0:
                     Console.WriteLine("There is nothing to open here");
                     break;
 
                 case 1:
-                    
                     foreach (RoomExit roomExit in Location.RoomExits)
                     {
                         if (secondWordToEnd == roomExit.Name.ToLower() || secondWordToEnd == "door")
                         {
-                            if (!roomExit.IsLocked) { 
+                            if (!roomExit.IsLocked)
+                            {
                                 if (roomExit.IsClosed)
                                 {
                                     roomExit.IsClosed = false;
@@ -258,18 +241,12 @@ namespace Inlämningsuppgift3.Classes
                             {
                                 Console.WriteLine($"The {roomExit.Name.ToLower()} is locked.");
                                 break;
-
                             }
-                        
                         }
-
-
                     }
-
                     break;
 
                 default:
-
                     if (secondWordToEnd == "door")
                     {
                         Console.WriteLine("Which door do you want to open?");
@@ -299,20 +276,13 @@ namespace Inlämningsuppgift3.Classes
                                 {
                                     Console.WriteLine($"The {roomExit.Name.ToLower()} is locked.");
                                     break;
-
-
                                 }
-
                             }
-
                         }
                     }
                     break;
-                           
-            }       
-
+            }
         }
-
 
         public void Take(string takenObject, string[] splittedString)
         {
@@ -322,28 +292,21 @@ namespace Inlämningsuppgift3.Classes
                 {
                     if ((item.Name.ToLower() == takenObject.ToLower()) && item.IsVisible)
                     {
-                        
-                            if (item.CanBeTaken)
-                            {
-                                Location.Items.Remove(item);
-                                Inventory.Add(item);
-                                Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
-                                break;
-                            }
-                            else
-                            {
-                                Console.WriteLine(item.CantBeTakenDescription);
-                                break;
-                            }
-                        
+                        if (item.CanBeTaken)
+                        {
+                            Location.Items.Remove(item);
+                            Inventory.Add(item);
+                            Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine(item.CantBeTakenDescription);
+                            break;
+                        }
                     }
-                    
-                        
-
-                    
                 }
                 Console.WriteLine($"What '{takenObject}'?");
-
             }
             else
             {

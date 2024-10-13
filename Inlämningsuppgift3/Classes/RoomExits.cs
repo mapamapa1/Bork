@@ -15,13 +15,9 @@ namespace Inlämningsuppgift3.Classes
 
         public bool IsClosed { get; set; }
 
-
         public RoomExit()
         {
                 
         }
-
-
-
     }
 }
