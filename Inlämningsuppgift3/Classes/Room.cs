@@ -23,20 +23,37 @@ namespace Inlämningsuppgift3.Classes
 
         }
 
+        public string RoomDescription() {
 
+            string description = $"\n----------------\n{Name}\n----------------\n{Description}\n";
 
+            return description;
+        }
+           
         public string RoomContainsDescription()
         {
             string returnString = "";
 
-           foreach(Item item in Items)
-           {
-                returnString += ($"There is a {item.Name.ToLower()} on the floor.\n");
+            foreach (Item item in Items)
+            {
+                if (item.IsVisible == true)
+                {
 
-           }
+                    if (item.InEnvironmentDescription == null)
+                    {
+                        returnString += ($"There is a {item.Name.ToLower()} on the floor.\n");
+                    }
+                    else
+                    {
+                        returnString += (item.InEnvironmentDescription);
 
-           
+                    }
 
+
+
+                }
+
+            }
             return returnString;
 
         }

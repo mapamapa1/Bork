@@ -4,10 +4,8 @@
 
 TODO: 
 
-implement synonyms for items and doors - one word for writing out and replaced synonym for checking
-replace item of many words with basic item in input
 
-
+Can't open iron door by saying "open iron door" only "open door"
 
 
 objects of interest

@@ -17,25 +17,24 @@
     "Items": [
       {
         "Name": "Pack of bubblegum",
-        "Synonyms": [ "bubblegum", "gum" ],
-        "Description": "A pack of bubblegum. The brand name is \"Hubbabubba\". A classic from your childhood."
+        "Synonyms": [ "bubblegum", "gum", "pack of bubblegum", "pack of gum" ],
+        "Description": "A pack of bubblegum. The brand name is \"Hubbabubba\". A classic from your childhood.",
+        "IsVisible": true,
+        "CanBeTaken": true
       },
       {
         "Name": "Rusty key",
         "Synonyms": [ "key" ],
-        "Description": "An old rusty key of simple design."
-      },
-
-      {
-        "Name": "Test key",
-        "Synonyms": [ "key" ],
-        "Description": "A test key of simple design."
+        "Description": "An old rusty key of simple design.",
+        "IsVisible": true,
+        "CanBeTaken": true
       }
+
     ]
   },
   {
     "Name": "Oak Room",
-    "Description": "You are in a large circular room, in the middle of the room there is a patch of dirt, and on it stands a large oak tree, far above the oak in the ceiling there is a small opening in the ceiling where some sun shines through",
+    "Description": "You are in a large circular room, in the middle of the room there is a patch of dirt, and on it stands a *Tree*.",
     "RoomExits": [
       {
         "Name": "Wooden door",
@@ -44,33 +43,29 @@
         "Direction": "East",
         "Connection": "Drainage Room",
         "IsLocked": false,
-        "IsClosed": true
+        "IsClosed": false
       }
     ],
     "Items": [
       {
         "Name": "Stick",
-        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
-      },
-      {
-        "Name": "Stick",
-        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
-      },
-      {
-        "Name": "Stick",
-        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
+        "Description": "A stick from an oak tree, it's quite straight. It's a good stick.",
+        "InEnvironmentDescription": "A stick lies under the oak tree",
+        "IsVisible": false,
+        "CanBeTaken": true
       }
+
     ],
     "RoomObjectOfInterest": [
       {
-        "Name": "Oak",
-        "Description": "A large oak tree, must be more than fifty years old. On the ground next to it you notice some sticks that have fallen from the tree"
+        "Name": "Tree",
+        "Description": "A large oak tree, must be more than fifty years old. On the ground next to it you notice a stick that has fallen from the tree"
       }
     ]
   },
   {
     "Name": "Drainage Room",
-    "Description": "You are in some sort of drainage room, the floor slopes towards the center of the room where there is a grated drain in the floor that collects water from the other rooms.",
+    "Description": "You are in some sort of drainage room, the floor slopes towards the center of the room\nwhere there is a *Drain* in the floor that collects water from the other rooms.",
     "RoomExits": [
       {
         "Name": "Wooden door",
@@ -99,10 +94,21 @@
 
       }
     ],
+    "Items": [
+      {
+        "Name": "Golden key",
+        "Synonyms": [ "key" ],
+        "Description": "A key of pure gold.",
+        "InEnvironmentDescription": "A golden key is stuck down the drain.",
+        "CantBeTakenDescription": "Your hand is too big to be able to reach through the iron bars of the drainage hole.",
+        "IsVisible": false,
+        "CanBeTaken": false
+      }
+    ],
     "RoomObjectOfInterest": [
       {
         "Name": "Drain",
-        "Description": "A drainage hole"
+        "Description": "A drainage hole that collects water from the floor. When you look closer you see something down the drain. A golden key is stuck in the sludge below."
       }
     ]
   },
