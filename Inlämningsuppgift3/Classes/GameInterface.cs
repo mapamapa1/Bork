@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -49,6 +50,18 @@ namespace Inlämningsuppgift3.Classes
                     Console.WriteLine(Player.Location.RoomDescription());
                     
                     newLocation = false;
+
+                    if (Player.Location.Name.ToLower() == "final room")
+                    {
+                        Console.WriteLine($"Congratulations! You have beaten BORK! You finished the game in {moveCounter} moves.\n" +
+                            $"Press any key to QUIT.");
+
+                        Console.ReadKey();
+                        Environment.Exit(0);
+
+
+
+                    }
                 }
 
                 Console.WriteLine();

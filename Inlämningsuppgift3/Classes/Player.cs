@@ -201,6 +201,7 @@ namespace Inlämningsuppgift3.Classes
             if (secondWordToEnd == "")
             {
                 Console.WriteLine("What do you want to 'open'?");
+                return;
             }
 
             int amountOfClosedExits = 0;
@@ -216,7 +217,7 @@ namespace Inlämningsuppgift3.Classes
             {
                 case 0:
                     Console.WriteLine("There is nothing to open here");
-                    break;
+                    return;
 
                 case 1:
                     foreach (RoomExit roomExit in Location.RoomExits)
@@ -229,28 +230,30 @@ namespace Inlämningsuppgift3.Classes
                                 {
                                     roomExit.IsClosed = false;
                                     Console.WriteLine($"You open the {roomExit.Name.ToLower()}.");
-                                    break;
+                                    return;
                                 }
                                 else
                                 {
                                     Console.WriteLine("The door is already open.");
-                                    break;
+                                    return;
                                 }
                             }
                             else
                             {
                                 Console.WriteLine($"The {roomExit.Name.ToLower()} is locked.");
-                                break;
+                                return;
                             }
                         }
+
                     }
-                    break;
+                    Console.WriteLine($"What is '{secondWordToEnd}'?");
+                    return;
 
                 default:
                     if (secondWordToEnd == "door")
                     {
                         Console.WriteLine("Which door do you want to open?");
-                        break;
+                        return;
                     }
                     else
                     {
@@ -264,23 +267,24 @@ namespace Inlämningsuppgift3.Classes
                                     {
                                         roomExit.IsClosed = false;
                                         Console.WriteLine($"You open the {roomExit.Name.ToLower()}.");
-                                        break;
+                                        return;
                                     }
                                     else
                                     {
                                         Console.WriteLine("The door is already open.");
-                                        break;
+                                        return;
                                     }
                                 }
                                 else
                                 {
                                     Console.WriteLine($"The {roomExit.Name.ToLower()} is locked.");
-                                    break;
+                                    return;
                                 }
                             }
                         }
                     }
-                    break;
+                    Console.WriteLine($"What is '{secondWordToEnd}'?");
+                    return;
             }
         }
 
@@ -296,13 +300,14 @@ namespace Inlämningsuppgift3.Classes
                         {
                             Location.Items.Remove(item);
                             Inventory.Add(item);
+                            item.InEnvironmentDescription = null;
                             Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
-                            break;
+                            return;
                         }
                         else
                         {
                             Console.WriteLine(item.CantBeTakenDescription);
-                            break;
+                            return;
                         }
                     }
                 }
