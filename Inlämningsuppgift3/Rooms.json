@@ -24,6 +24,12 @@
         "Name": "Rusty key",
         "Synonyms": [ "key" ],
         "Description": "An old rusty key of simple design."
+      },
+
+      {
+        "Name": "Test key",
+        "Synonyms": [ "key" ],
+        "Description": "A test key of simple design."
       }
     ]
   },
@@ -87,7 +93,7 @@
         "Description": "A beautiful golden door.",
         "Synonyms": [ "door" ],
         "Direction": "North",
-        "Connection" : "Final room",
+        "Connection": "Final room",
         "IsLocked": true,
         "IsClosed": true
 

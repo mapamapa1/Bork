@@ -19,11 +19,16 @@ namespace Inlämningsuppgift3.Classes
 
         public string SecondItemString { get; set; }
 
+        private Player _player;
+
         public WordListProcessor WordListProcessor { get; set; }
 
-        public InputProcessor()
+        public InputProcessor(Player player)
         {
             WordListProcessor = new WordListProcessor();
+            _player = player;
+
+
         }
         public void Process(string playerInput)
         {
@@ -33,12 +38,12 @@ namespace Inlämningsuppgift3.Classes
 
             if (PlayerInputSplittedString.Length > 1)
             {
-                IndexOfFirstSpace = PlayerInput.IndexOf(' ');
-                FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
-                SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+                UpdateProperties();
                 CheckAndReplacePrepositions();
+                ReplaceItemSynonyms();
                 if (SecondWordToEnd.Contains("on"))
                 {
+
                     GetItemsFromInput();
 
                 }
@@ -74,5 +79,118 @@ namespace Inlämningsuppgift3.Classes
 
         }
 
+        public void ReplaceItemSynonyms()
+        {
+            int synonymsNum = 0;
+            string foundSynonym = "";
+            string itemName = "";
+            List<string> synonymList = new List<string>();
+            List<string> itemNameList = new List<string>();
+
+            foreach (Item item in _player.Inventory)
+            {
+                foreach (string synonym in item.Synonyms)
+                {
+                    for (int i= 0; i < PlayerInputSplittedString.Length; i++)
+                    {
+                        if (PlayerInputSplittedString[i].Contains(synonym))
+                        {
+                            synonymsNum += 1;
+                            synonymList.Add(synonym);
+                            foundSynonym = synonym;
+                            itemName = item.Name;
+
+                        }
+
+                    }
+                    
+                }           
+            }
+            if (synonymsNum == 1)
+            {
+                PlayerInput = PlayerInput.Replace(foundSynonym, itemName);
+                UpdateProperties();
+
+            }
+            else if (synonymsNum > 1)
+            {
+                bool doubleFound = false;
+
+                foreach(string string1 in synonymList)
+                {
+                    foreach(string string2 in synonymList)
+                    {
+                        if(string1 == string2)
+                        {
+                            foundSynonym = string1;
+                            doubleFound = true;
+                            break;
+
+                        }
+
+                    }
+
+
+                }
+
+                if (!doubleFound)
+                {
+                    Console.WriteLine($"Which {foundSynonym}?");
+
+                }
+                else
+                {
+                    foreach (string synonym in synonymList)
+                    {
+                        foreach (string item in itemNameList)
+                        {
+
+                            PlayerInput.Replace(synonym, item);
+    
+                        }
+                    }
+                }
+
+                //compare synonyms in synonymslist for doubles
+
+
+            }
+            
+            //foreach (Item item in _player.Location)
+            //{
+            //    foreach (string synonym in item.Synonyms)
+            //    {
+            //        if (PlayerInput.Contains(synonym))
+            //        {
+            //            PlayerInput.Replace(synonym, item.Name);
+
+            //        }
+
+            //    }
+            //}
+
+        }
+
+        public void UpdateProperties()
+        {
+            PlayerInput = PlayerInput.ToLower();
+            PlayerInputSplittedString = PlayerInput.Split(" ");
+            IndexOfFirstSpace = PlayerInput.IndexOf(' ');
+            FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
+            SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+
+        }
+
+        public void PrintProperties()
+        {
+            Console.WriteLine("PlayerInput: " + PlayerInput);
+            Console.WriteLine("PlayerInputSplittedString: " + string.Join(", ", PlayerInputSplittedString));
+            Console.WriteLine("IndexOfFirstSpace: " + IndexOfFirstSpace);
+            Console.WriteLine("FirstWord: " + FirstWord);
+            Console.WriteLine("SecondWordToEnd: " + SecondWordToEnd);
+            Console.WriteLine("FirstItemString: " + FirstItemString);
+            Console.WriteLine("SecondItemString: " + SecondItemString);
+
+        }
     }
 }

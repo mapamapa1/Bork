@@ -24,9 +24,9 @@ namespace Inlämningsuppgift3.Classes
             GameRunning = true;
             Player = new Player();
             Rooms = new List<Room>();
-            Rooms = Repository.LoadRooms();
-            InputProcessor = new InputProcessor();
+            Rooms = Repository.LoadRooms();           
             Player.Location = Rooms[0];
+            InputProcessor = new InputProcessor(Player);
 
         }
 
@@ -74,11 +74,12 @@ namespace Inlämningsuppgift3.Classes
 
                     case ("use"):
                         Player.Use(InputProcessor.PlayerInput, InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString, InputProcessor.FirstItemString, InputProcessor.SecondItemString);
-
+                        InputProcessor.PrintProperties();
                         break;
 
                     case ("take"):
                         Player.Take(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+                        InputProcessor.PrintProperties();
 
                         break;
 
