@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Inlämningsuppgift3.Classes
 {
@@ -21,12 +23,12 @@ namespace Inlämningsuppgift3.Classes
         public GameInterface()
 
         {
-            GameRunning = true;
+            GameRunning = false;
             Player = new Player();
             Rooms = new List<Room>();
-            Rooms = Repository.LoadRooms();
-            InputProcessor = new InputProcessor();
+            Rooms = Repository.LoadRooms();           
             Player.Location = Rooms[0];
+            InputProcessor = new InputProcessor(Player);
 
         }
 
@@ -34,14 +36,18 @@ namespace Inlämningsuppgift3.Classes
         {
             string playerInput;
             bool newLocation = true;
+            int moveCounter = 0;
+
+            Intro();
 
             while (GameRunning)
             {
 
                 if (newLocation)
-                {
-                    Console.WriteLine(Player.Location.Description);
-                    Console.WriteLine(Player.Location.RoomContainsDescription());
+                {                   
+
+                    Console.WriteLine(Player.Location.RoomDescription());
+                    
                     newLocation = false;
                 }
 
@@ -60,26 +66,26 @@ namespace Inlämningsuppgift3.Classes
 
                     case ("look"):
 
-                        Player.Look(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+                        Player.Look(InputProcessor.PlayerInput, InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
                         break;
 
                     case ("inventory"):
-                    case ("open inventory"):
                         Player.ShowInventory();
                         break;
 
                     case ("go"):
 
-                        newLocation = Player.Move(InputProcessor.PlayerInputSplittedString[1], Rooms);
+                        newLocation = Player.Move(InputProcessor.PlayerInputSplittedString, InputProcessor.SecondWordToEnd, Rooms);
                         break;
 
                     case ("use"):
-                        Player.Use(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
-
+                        Player.Use(InputProcessor.PlayerInput, InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString, InputProcessor.FirstItemString, InputProcessor.SecondItemString);
+                        
                         break;
 
                     case ("take"):
                         Player.Take(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+                        
 
                         break;
 
@@ -88,14 +94,62 @@ namespace Inlämningsuppgift3.Classes
 
                         break;
 
+                    case ("open"):
+                        Player.Open(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+                        
+                        break;
+
+                    case ("help"):
+                        
+                        Help();
+                        break;
+
                     default:
                         Console.WriteLine($"I don't know the word \"{InputProcessor.PlayerInputSplittedString[0]}\".");
                         break;
 
 
                 }
-
+                moveCounter++;
             }
+
+        }
+
+        public void Intro()
+        {
+            string playerInput;
+            string title = "▀█████████▄   ▄██████▄     ▄████████    ▄█   ▄█▄ \r\n  ███    ███ ███    ███   ███    ███   ███ ▄███▀ \r\n  ███    ███ ███    ███   ███    ███   ███▐██▀   \r\n ▄███▄▄▄██▀  ███    ███  ▄███▄▄▄▄██▀  ▄█████▀    \r\n▀▀███▀▀▀██▄  ███    ███ ▀▀███▀▀▀▀▀   ▀▀█████▄    \r\n  ███    ██▄ ███    ███ ▀███████████   ███▐██▄   \r\n  ███    ███ ███    ███   ███    ███   ███ ▀███▄ \r\n▄█████████▀   ▀██████▀    ███    ███   ███   ▀█▀ \r\n                          ███    ███   ▀         ";
+
+
+            Console.WriteLine($"{title}");
+            while (true)
+            {
+              
+                Console.WriteLine("\nWelcome to Bork! Type 'start' to start the game. If you need help type 'help'. Have fun!");
+
+
+                playerInput = Console.ReadLine();
+
+                switch (playerInput)
+                {
+                    case ("help"):
+                        Help();
+                        break;
+                    case ("start"):
+                        GameRunning = true;
+                        return;
+                        
+                }
+            
+            }
+            
+        }
+        public void Help()
+        {
+            Console.WriteLine("Write commands in the console to advance in the game.\n" +
+                "If you don't know what to do, type 'inspect' to get a clearer picture about what's going on around you.\n" +
+                "You can use items with other items with the syntax: use 'item1' on 'item2'.\n" +
+                "Good luck!");
 
         }
 
@@ -112,19 +166,10 @@ namespace Inlämningsuppgift3.Classes
     public class GameObject
     {
         public string Name { get; set; }
-        public string Description { get; set; }       
-
-
-        public void Inspect()
-        {
-            Console.WriteLine(Description);
-
-
-        }
+        public string Description { get; set; }
+        public string[] Synonyms { get; set; }
 
     }
-
-
 }
 using System;
 using System.Collections.Generic;
@@ -142,26 +187,31 @@ namespace Inlämningsuppgift3.Classes
         public int IndexOfFirstSpace { get; set; }
         public string FirstWord { get; set; }
         public string SecondWordToEnd { get; set; }
-
+        public string FirstItemString { get; set; }
+        public string SecondItemString { get; set; }
         public WordListProcessor WordListProcessor { get; set; }
 
-        public InputProcessor()
+        private Player _player;
+
+        public InputProcessor(Player player)
         {
             WordListProcessor = new WordListProcessor();
         }
+
         public void Process(string playerInput)
         {
- 
             PlayerInput = playerInput.ToLower();
             PlayerInputSplittedString = PlayerInput.Split(" ");
 
             if (PlayerInputSplittedString.Length > 1)
             {
-                IndexOfFirstSpace = PlayerInput.IndexOf(' ');
-                FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
-                SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+                UpdateProperties();
                 CheckAndReplacePrepositions();
 
+                if (SecondWordToEnd.Contains(" on "))
+                {
+                    GetItemsFromInput();
+                }
             }
             else
             {
@@ -170,10 +220,7 @@ namespace Inlämningsuppgift3.Classes
                 SecondWordToEnd = "";
             }
 
-                      
             PlayerInputSplittedString[0] = WordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
-            
-            
         }
 
         public void CheckAndReplacePrepositions()
@@ -183,7 +230,22 @@ namespace Inlämningsuppgift3.Classes
             IndexOfFirstSpace = PlayerInput.IndexOf(' ');
             FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
             SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+        }
 
+        public void GetItemsFromInput()
+        {
+            int indexBeforeOn = SecondWordToEnd.IndexOf("on");
+            FirstItemString = SecondWordToEnd.Substring(0, indexBeforeOn - 1);
+            SecondItemString = SecondWordToEnd.Substring(indexBeforeOn + "on".Length + 1);
+        }
+
+        public void UpdateProperties()
+        {
+            PlayerInput = PlayerInput.ToLower();
+            PlayerInputSplittedString = PlayerInput.Split(" ");
+            IndexOfFirstSpace = PlayerInput.IndexOf(' ');
+            FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
+            SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
         }
     }
 }
@@ -197,31 +259,119 @@ namespace Inlämningsuppgift3.Classes
 {
     public class Item : GameObject
     {
-
         public bool IsContainer { get; set; }
         public List<Item> Container { get; set; } = new List<Item>();
-
-        public string[] Synonyms { get; set; }
-
-        public string ItemInEnvironmentDescription { get; set; }
-
-        //public int Amount { get; set; }
+        public string InEnvironmentDescription { get; set; }
+        public bool IsVisible { get; set; }
+        public bool CanBeTaken { get; set; }
+        public string CantBeTakenDescription { get; set; }
 
         public Item()
         {
-       
-
+      
         }
-     
+
+        public void Use(string[] splittedString, List<Item> inventory)
+        {
+            switch (Name)
+            {
+
+                case ("Pack of bubblegum"):
+                 
+                    Console.WriteLine("You take a piece of gum and chew it for a while. You put the now chewed gum in your inventory.");                
+                    Item chewedGum = new Item();
+                    chewedGum.Name = "Chewed gum";
+                    chewedGum.Description = "A piece of chewed gum, the taste is long gone.";
+                    inventory.Add(chewedGum);
+
+                    break;
+
+                case ("Chewed gum"):
+
+                    Console.WriteLine("You can't use that here.");
+                    break;
+
+
+                case ("Stick"):
+                    Console.WriteLine("You hit yourself in the head with the stick.");
+                    break;
+
+                case ("Rusty key"):
+                    Console.WriteLine("By itself it doesn't do much.");
+                    break;
+
+                case ("Golden key"):
+                    Console.WriteLine("By itself it doesn't do much.");
+                    break;
+
+            }
+        }
+
+        //items on items
+        public void Combination(Item item2, List<Item> inventory, List<Item> locationItems)
+        {
+            if (((Name.ToLower() == "chewed gum") && (item2.Name.ToLower() == "stick"))|| ((Name.ToLower() == "stick") && (item2.Name.ToLower() == "chewed gum")))
+            {
+                inventory.Remove(this);
+                inventory.Remove(item2);
+                locationItems.Remove(this);
+                locationItems.Remove(item2);
+
+                Item newItem = new Item();
+                Console.WriteLine("You put the chewed gum at the end of the stick. You have created an abomination.");
+                newItem.Name = "Chewing gum stick";
+                newItem.Description = "A stick with a piece of chewed gum attached to the end of it.";
+                inventory.Add(newItem);
+
+            }
+            if (((Name.ToLower() == "chewing gum stick") && (item2.Name.ToLower() == "golden key")) || ((Name.ToLower() == "golden key") && (item2.Name.ToLower() == "chewed gum on a stick")))
+            {
+                inventory.Remove(this);
+                inventory.Remove(item2);
+                locationItems.Remove(this);
+                locationItems.Remove(item2);
+
+                Item newItem = new Item();
+                Console.WriteLine("You reach down the drain with your new abomination and press it against the key.\nThe key attaches itself to the gum and you pull it out.\n" +
+                    "You put the key in your inventory.");
+                newItem.Name = "Golden key";
+                newItem.Description = "A shining golden key that probably fits an equally shining door.";
+                inventory.Add(newItem);
+            }
+        }
+
+        //keys on doors
+        public void Combination(RoomExit roomExit)
+        {
+
+            if ((Name.ToLower() == "rusty key") && (roomExit.Name.ToLower() == "iron door"))
+            {
+                roomExit.IsLocked = false;
+                Console.WriteLine($"You unlock the {roomExit.Name.ToLower()}.");
+
+                return;
+            }
+            
+            if ((Name.ToLower() == "golden key") && (roomExit.Name.ToLower() == "golden door"))
+            {
+                roomExit.IsLocked = false;
+                Console.WriteLine($"You unlock the {roomExit.Name.ToLower()}.");
+
+                return;
+
+            }
+            
+            Console.WriteLine("That doesn't work.");           
+        }
     }
-
-
 }
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -231,18 +381,17 @@ namespace Inlämningsuppgift3.Classes
     {
         public string Name { get; set; }
         public List<Item> Inventory { get; set; } = new List<Item>();
-
         public Room Location { get; set; }
 
         public Player()
         {
-               //loadStartingItems()
+            //loadStartingItems()
         }
+
         public void DropItem(Item item)
         {
             Location.Items.Add(item);
             Inventory.Remove(item);
-            
         }
 
         public void ShowInventory()
@@ -253,7 +402,6 @@ namespace Inlämningsuppgift3.Classes
             }
             else
             {
-
                 Console.WriteLine($"Inventory:");
 
                 foreach (Item item in Inventory)
@@ -263,60 +411,88 @@ namespace Inlämningsuppgift3.Classes
             }
         }
 
-        public void Look(string secondWordToEnd, string[] splittedString)
+        public void Look(string playerInput, string secondWordToEnd, string[] splittedString)
         {
-            if (splittedString.Length == 1)
+            if ((splittedString.Length == 1 && (splittedString[0] == "look")) || (playerInput == "look around"))
             {
-
-                Console.WriteLine(Location.Description);
+                Console.WriteLine(Location.RoomDescription());
                 Console.WriteLine(Location.RoomContainsDescription());
-                
+                Console.WriteLine(Location.RoomExitsDescription());
             }
             else
             {
-
                 foreach (Item item in Location.Items)
                 {
-                    if (item.Name.ToLower() == secondWordToEnd.ToLower())
+                    if ((item.Name.ToLower() == secondWordToEnd.ToLower()) && (item.IsVisible = true))
                     {
                         Console.WriteLine(item.Description);
-
                     }
                 }
+
                 foreach (Item item in Inventory)
                 {
                     if (item.Name.ToLower() == secondWordToEnd.ToLower())
                     {
                         Console.WriteLine($"{item.Description} [in inventory]");
+                    }
+                }
 
+                foreach (RoomExit roomExit in Location.RoomExits)
+                {
+                    if (roomExit.Name.ToLower() == secondWordToEnd.ToLower())
+                    {
+                        Console.WriteLine($"{roomExit.Description}.");
+                    }
+                }
+
+                foreach (RoomObjectOfInterest objectOfInterest in Location.RoomObjectOfInterest)
+                {
+                    if (objectOfInterest.Name.ToLower() == secondWordToEnd.ToLower())
+                    {
+                        Console.WriteLine(objectOfInterest.Description);
+                        objectOfInterest.HasBeenInspected = true;
+
+                        foreach (Item item in Location.Items)
+                        {
+                            item.IsVisible = true;
+                        }
                     }
                 }
             }
-
         }
 
-        public bool Move(string direction, List <Room> roomList)
+        public bool Move(string[] playerinputSplittedString, string direction, List<Room> roomList)
         {
-
             bool hasMoved = false;
+            string newLocation = "";
 
-            foreach(RoomExit roomexit in Location.RoomExits)
+            if (playerinputSplittedString.Length == 1)
             {
-                string newLocation = "";
+                Console.WriteLine("Where do you want to 'move'?");
+                return false;
+            }
 
+            foreach (RoomExit roomexit in Location.RoomExits)
+            {
                 if (direction.ToLower() == roomexit.Direction.ToLower())
                 {
-                    newLocation = roomexit.Connection;
-
+                    if (roomexit.IsClosed == false)
+                    {
+                        newLocation = roomexit.Connection;
+                    }
+                    else
+                    {
+                        Console.WriteLine("There is a door blocking your path.");
+                        return false;
+                    }
                 }
 
-                foreach(Room room in roomList)
+                foreach (Room room in roomList)
                 {
                     if (newLocation == room.Name)
                     {
                         Location = room;
                         hasMoved = true;
-
                     }
                 }
             }
@@ -332,82 +508,172 @@ namespace Inlämningsuppgift3.Classes
             }
         }
 
-        public void Use(string secondWordToEnd, string[] splittedString)
+        public void Use(string playerInput, string secondWordToEnd, string[] splittedString, string firstItem, string secondItem)
         {
             if (splittedString.Length > 1)
             {
-                if (secondWordToEnd.Contains("on"))
+                if (secondWordToEnd.Contains(" on "))
                 {
-                    for (int i = 0; i < splittedString.Length; i++)
+                    Item? foundObject1 = Location.Items.FirstOrDefault(i => i.Name.ToLower() == firstItem) ??
+                                          Inventory.FirstOrDefault(i => i.Name.ToLower() == firstItem);
+
+                    Item? foundObject2 = Location.Items.FirstOrDefault(i => i.Name.ToLower() == secondItem) ??
+                                          Inventory.FirstOrDefault(i => i.Name.ToLower() == secondItem);
+
+                    if (foundObject1 != null && foundObject2 == null)
                     {
-                        if (splittedString[i] == "on")
+                        RoomExit? foundRoomExit = Location.RoomExits.FirstOrDefault(i => i.Name.ToLower() == secondItem);
+
+                        if (foundRoomExit != null)
                         {
-                            string item1 = splittedString[i - 1];
-                            string item2 = splittedString[i + 1];
-
-                            this.Combination(item1, item2);
-
+                            foundObject1.Combination(foundRoomExit);
                         }
-
+                        else
+                        {
+                            Console.WriteLine($"I don't know what '{secondItem}' is.");
+                        }
                     }
-
+                    else if (foundObject1 != null && foundObject2 != null)
+                    {
+                        foundObject1.Combination(foundObject2, Inventory, Location.Items);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"I don't know what '{firstItem}' is.");
+                    }
                 }
                 else
                 {
-                    if (secondWordToEnd == "pack of bubblegum" || secondWordToEnd == "gum")
+                    Item? foundObject = Location.Items.FirstOrDefault(i => i.Name.ToLower() == secondWordToEnd) ??
+                                          Inventory.FirstOrDefault(i => i.Name.ToLower() == secondWordToEnd);
+
+                    if (foundObject != null)
                     {
-
-                        foreach (Item item in Location.Items)
-                        {
-                            if (item.Name.ToLower() == secondWordToEnd.ToLower())
-                            {                               
-
-                            }
-                        }
-                        foreach (Item item in Inventory)
-                        {
-                            if (item.Name.ToLower() == secondWordToEnd.ToLower())
-                            {
-                         
-
-                            }
-                        }
+                        foundObject.Use(splittedString, Inventory);
                     }
-
+                    else
+                    {
+                        Console.WriteLine($"I don't know what '{secondWordToEnd}' is.");
+                    }
                 }
-                
-
             }
             else
             {
                 Console.WriteLine("What do you want to 'use'?");
             }
-
         }
 
-        public void Combination(string item1, string item2)
+        public void Open(string secondWordToEnd, string[] splittedString)
         {
+            if (secondWordToEnd == "")
+            {
+                Console.WriteLine("What do you want to 'open'?");
+            }
 
-            Console.WriteLine("kombination");
+            int amountOfClosedExits = 0;
+            foreach (RoomExit roomExit in Location.RoomExits)
+            {
+                if (roomExit.IsClosed == true)
+                {
+                    amountOfClosedExits += 1;
+                }
+            }
 
+            switch (amountOfClosedExits)
+            {
+                case 0:
+                    Console.WriteLine("There is nothing to open here");
+                    break;
 
+                case 1:
+                    foreach (RoomExit roomExit in Location.RoomExits)
+                    {
+                        if (secondWordToEnd == roomExit.Name.ToLower() || secondWordToEnd == "door")
+                        {
+                            if (!roomExit.IsLocked)
+                            {
+                                if (roomExit.IsClosed)
+                                {
+                                    roomExit.IsClosed = false;
+                                    Console.WriteLine($"You open the {roomExit.Name.ToLower()}.");
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("The door is already open.");
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"The {roomExit.Name.ToLower()} is locked.");
+                                break;
+                            }
+                        }
+                    }
+                    break;
 
-
+                default:
+                    if (secondWordToEnd == "door")
+                    {
+                        Console.WriteLine("Which door do you want to open?");
+                        break;
+                    }
+                    else
+                    {
+                        foreach (RoomExit roomExit in Location.RoomExits)
+                        {
+                            if (secondWordToEnd == roomExit.Name.ToLower())
+                            {
+                                if (!roomExit.IsLocked)
+                                {
+                                    if (roomExit.IsClosed)
+                                    {
+                                        roomExit.IsClosed = false;
+                                        Console.WriteLine($"You open the {roomExit.Name.ToLower()}.");
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("The door is already open.");
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"The {roomExit.Name.ToLower()} is locked.");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    break;
+            }
         }
+
         public void Take(string takenObject, string[] splittedString)
         {
             if (splittedString.Length > 1)
             {
                 foreach (Item item in Location.Items)
                 {
-                    if (item.Name.ToLower() == takenObject.ToLower())
+                    if ((item.Name.ToLower() == takenObject.ToLower()) && item.IsVisible)
                     {
-                        Location.Items.Remove(item);
-                        Inventory.Add(item);
-                        Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
-                        break;
+                        if (item.CanBeTaken)
+                        {
+                            Location.Items.Remove(item);
+                            Inventory.Add(item);
+                            Console.WriteLine($"You pick up the {item.Name.ToLower()}.");
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine(item.CantBeTakenDescription);
+                            break;
+                        }
                     }
                 }
+                Console.WriteLine($"What '{takenObject}'?");
             }
             else
             {
@@ -419,7 +685,6 @@ namespace Inlämningsuppgift3.Classes
         {
             if (splittedString.Length > 1)
             {
-
                 foreach (Item item in Inventory)
                 {
                     if (item.Name.ToLower() == droppedObject.ToLower())
@@ -507,7 +772,6 @@ namespace Inlämningsuppgift3.Classes
     {
         public List<Item> Items { get; set; }
         public List<RoomExit> RoomExits { get; set; }
-
         public List<RoomObjectOfInterest> RoomObjectOfInterest { get; set; }
 
         public Room()
@@ -520,28 +784,52 @@ namespace Inlämningsuppgift3.Classes
 
         }
 
+        public string RoomDescription() {
 
+            string description = $"\n----------------\n{Name}\n----------------\n{Description}\n";
 
+            return description;
+        }
+           
         public string RoomContainsDescription()
         {
             string returnString = "";
 
-           foreach(Item item in Items)
-           {
-                returnString += ($"There is a {item.Name.ToLower()} on the floor.\n");
+            foreach (Item item in Items)
+            {
+                if (item.IsVisible == true)
+                {
 
-           }
+                    if (item.InEnvironmentDescription == null)
+                    {
+                        returnString += ($"There is a {item.Name.ToLower()} on the floor.\n");
+                    }
+                    else
+                    {
+                        returnString += (item.InEnvironmentDescription);
 
-           
-
+                    }
+                }
+            }
             return returnString;
 
         }
 
+        public string RoomExitsDescription()
+        {
+            string returnString = "";
 
+            foreach (RoomExit roomExit in RoomExits)
+            {
+                string openClose = (roomExit.IsClosed) ? "closed" : "open";
 
+                returnString += ($"On the {roomExit.Direction.ToLower()} wall there is a {roomExit.Name.ToLower()}. It is {openClose}.\n");
 
+            }
+    
+            return returnString;
 
+        }
     }
 }
 using System;
@@ -552,21 +840,19 @@ using System.Threading.Tasks;
 
 namespace Inlämningsuppgift3.Classes
 {
-    public class RoomExit
+    public class RoomExit : GameObject
     {
         public string Direction { get; set; }
 
         public string Connection { get; set; }
         public bool IsLocked { get; set; }
 
+        public bool IsClosed { get; set; }
 
         public RoomExit()
         {
                 
         }
-
-
-
     }
 }
 using System;
@@ -576,17 +862,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Inlämningsuppgift3.Classes
-{
-
+{   
 
     public class RoomObjectOfInterest : GameObject
     {
+        public bool HasBeenInspected { get; set; }
 
-
-
+        public RoomObjectOfInterest()
+        {
+            HasBeenInspected = false;
+        }
     }
-
-
 }
 using System;
 using System.Collections.Generic;
@@ -599,7 +885,7 @@ namespace Inlämningsuppgift3.Classes
 {
     public class WordListProcessor
     {
-        public Dictionary<string, string[]> ActionWordList;
+        public Dictionary<string, string[]> ActionWordList;       
         public string[] PrepositionWordList;
 
         public WordListProcessor()
@@ -630,10 +916,8 @@ namespace Inlämningsuppgift3.Classes
                     {
                         return pair.Key;
 
-                    }
-                  
+                    }          
                 }
-
             }
             return word;
         }
@@ -656,99 +940,160 @@ namespace Inlämningsuppgift3.Classes
 
             return returnArray;
         }
+    }
+}
+using Inlämningsuppgift3.Classes;
 
+namespace Inlämningsuppgift3
+{
+    public class Program
+    {
+        static void Main(string[] args)
+        {
+
+            GameInterface game = new GameInterface();
+            game.Game();
+
+
+
+        }
     }
 }
 
 JSON files:
 
 Rooms.json:
-
 [
   {
     "Name": "Dungeon",
-    "Description": "You are in a small dungeon cell, carved out of rock.",
-    "RoomExits": [ { "Direction": "North", "Connection" : "Drainage Room", "IsLocked" : true } ],
+    "Description": "You are in a small dungeon cell.",
+    "RoomExits": [
+      {
+        "Name": "Iron door",
+        "Description": "A thick iron door",
+        "Synonyms": [ "door" ],
+        "Direction": "North",
+        "Connection": "Drainage Room",
+        "IsLocked": true,
+        "IsClosed": true
+      }
+    ],
 
     "Items": [
       {
         "Name": "Pack of bubblegum",
-        "Synonyms": ["bubblegum", "gum"],
-        "Description": "A pack of bubblegum. The name of the brand is \"Hubbabubba\"."
+        "Synonyms": [ "bubblegum", "gum", "pack of bubblegum", "pack of gum" ],
+        "Description": "A pack of bubblegum. The brand name is \"Hubbabubba\". A classic from your childhood.",
+        "IsVisible": true,
+        "CanBeTaken": true
       },
       {
         "Name": "Rusty key",
-        "Synonyms": ["key"],
-        "Description": "An old rusty key of simple design."
+        "Synonyms": [ "key" ],
+        "Description": "An old rusty key of simple design.",
+        "IsVisible": true,
+        "CanBeTaken": true
       }
+
     ]
   },
   {
     "Name": "Oak Room",
-    "Description": "You are in a large circular room, in the middle of the room there is a patch of dirt, and on it stands a large oak tree, far above the oak in the ceiling there is a small opening with a faint blue light",
+    "Description": "You are in a large circular room, in the middle of the room there is a patch of dirt, and on it stands a *Tree*.",
     "RoomExits": [
       {
+        "Name": "Wooden door",
+        "Description": "A simple wooden door",
+        "Synonyms": [ "door" ],
         "Direction": "East",
-        "Connection": "Drainage Room"
+        "Connection": "Drainage Room",
+        "IsLocked": false,
+        "IsClosed": false
       }
     ],
     "Items": [
       {
         "Name": "Stick",
-        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
-      },
-      {
-        "Name": "Stick",
-        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
-      },
-      {
-        "Name": "Stick",
-        "Description": "A stick from an oak tree, it's quite straight. It's a good stick."
+        "Description": "A stick from an oak tree, it's quite straight. It's a good stick.",
+        "InEnvironmentDescription": "A stick lies under the oak tree",
+        "IsVisible": false,
+        "CanBeTaken": true
       }
+
     ],
     "RoomObjectOfInterest": [
       {
-        "Name": "Oak",
-        "Description": "A large oak tree, must be more than fifty years old. On the ground next to it you notice some sticks that have fallen from the tree"
+        "Name": "Tree",
+        "Description": "A large oak tree, must be more than fifty years old. On the ground next to it you notice a stick that has fallen from the tree"
       }
     ]
   },
   {
     "Name": "Drainage Room",
-    "Description": "You are in some sort of drainage room, the floor slopes towards the center of the room where there is a grated drain in the floor that collects water from the other rooms.",
+    "Description": "You are in some sort of drainage room, the floor slopes towards the center of the room\nwhere there is a *Drain* in the floor that collects water from the other rooms.",
     "RoomExits": [
       {
+        "Name": "Wooden door",
+        "Description": "A simple wooden door",
+        "Synonyms": [ "door" ],
         "Direction": "West",
-        "Connection": "Oak Room"
+        "Connection": "Oak Room",
+        "IsLocked": false,
+        "IsClosed": true
       },
       {
+        "Name": "Iron door",
+        "Description": "A thick iron door",
+        "Synonyms": [ "door" ],
         "Direction": "South",
-        "Connection":  "Dungeon"
+        "Connection": "Dungeon"
+      },
+      {
+        "Name": "Golden door",
+        "Description": "A beautiful golden door.",
+        "Synonyms": [ "door" ],
+        "Direction": "North",
+        "Connection": "Final room",
+        "IsLocked": true,
+        "IsClosed": true
+
+      }
+    ],
+    "Items": [
+      {
+        "Name": "Golden key",
+        "Synonyms": [ "key" ],
+        "Description": "A key of pure gold.",
+        "InEnvironmentDescription": "A golden key is stuck down the drain.",
+        "CantBeTakenDescription": "Your hand is too big to be able to reach through the iron bars of the drainage hole.",
+        "IsVisible": false,
+        "CanBeTaken": false
       }
     ],
     "RoomObjectOfInterest": [
       {
         "Name": "Drain",
-        "Description": "A drainage hole"
+        "Description": "A drainage hole that collects water from the floor. When you look closer you see something down the drain. A golden key is stuck in the sludge below."
       }
     ]
+  },
+  {
+    "Name": "Final room",
+    "Description": "You walk though a long tunnel sloping upwards, you see daylight in the distance. You are free."
   }
 ]
 
 WordList_ActionSynonyms.json:
-
 {
   "look": [ "check", "examine", "watch", "inspect" ],
-  "go": [ "walk", "move", "proceed" ],
+  "go": [ "walk", "move", "proceed", "run" ],
   "take": [ "grab", "pick up", "pick", "snatch", "get" ],
   "use": [],
   "open": [],
   "drop": ["throw", "discard"]
 
 }
-
-WordList_Prepositions.json:
-
+WordList_Prepositions.json
 [ "on", "with", "and" ]
 
 

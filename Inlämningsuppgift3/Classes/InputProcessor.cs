@@ -14,26 +14,31 @@ namespace Inlämningsuppgift3.Classes
         public int IndexOfFirstSpace { get; set; }
         public string FirstWord { get; set; }
         public string SecondWordToEnd { get; set; }
-
+        public string FirstItemString { get; set; }
+        public string SecondItemString { get; set; }
         public WordListProcessor WordListProcessor { get; set; }
 
-        public InputProcessor()
+        private Player _player;
+
+        public InputProcessor(Player player)
         {
             WordListProcessor = new WordListProcessor();
         }
+
         public void Process(string playerInput)
         {
- 
             PlayerInput = playerInput.ToLower();
             PlayerInputSplittedString = PlayerInput.Split(" ");
 
             if (PlayerInputSplittedString.Length > 1)
             {
-                IndexOfFirstSpace = PlayerInput.IndexOf(' ');
-                FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
-                SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+                UpdateProperties();
                 CheckAndReplacePrepositions();
 
+                if (SecondWordToEnd.Contains(" on "))
+                {
+                    GetItemsFromInput();
+                }
             }
             else
             {
@@ -42,10 +47,7 @@ namespace Inlämningsuppgift3.Classes
                 SecondWordToEnd = "";
             }
 
-                      
             PlayerInputSplittedString[0] = WordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
-            
-            
         }
 
         public void CheckAndReplacePrepositions()
@@ -55,7 +57,22 @@ namespace Inlämningsuppgift3.Classes
             IndexOfFirstSpace = PlayerInput.IndexOf(' ');
             FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
             SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+        }
 
+        public void GetItemsFromInput()
+        {
+            int indexBeforeOn = SecondWordToEnd.IndexOf("on");
+            FirstItemString = SecondWordToEnd.Substring(0, indexBeforeOn - 1);
+            SecondItemString = SecondWordToEnd.Substring(indexBeforeOn + "on".Length + 1);
+        }
+
+        public void UpdateProperties()
+        {
+            PlayerInput = PlayerInput.ToLower();
+            PlayerInputSplittedString = PlayerInput.Split(" ");
+            IndexOfFirstSpace = PlayerInput.IndexOf(' ');
+            FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
+            SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
         }
     }
 }

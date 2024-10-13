@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Inlämningsuppgift3.Classes
 {
@@ -21,12 +24,12 @@ namespace Inlämningsuppgift3.Classes
         public GameInterface()
 
         {
-            GameRunning = true;
+            GameRunning = false;
             Player = new Player();
             Rooms = new List<Room>();
-            Rooms = Repository.LoadRooms();
-            InputProcessor = new InputProcessor();
+            Rooms = Repository.LoadRooms();           
             Player.Location = Rooms[0];
+            InputProcessor = new InputProcessor(Player);
 
         }
 
@@ -34,15 +37,31 @@ namespace Inlämningsuppgift3.Classes
         {
             string playerInput;
             bool newLocation = true;
+            int moveCounter = 0;
+
+            Intro();
 
             while (GameRunning)
             {
 
                 if (newLocation)
-                {
-                    Console.WriteLine(Player.Location.Description);
-                    Console.WriteLine(Player.Location.RoomContainsDescription());
+                {                   
+
+                    Console.WriteLine(Player.Location.RoomDescription());
+                    
                     newLocation = false;
+
+                    if (Player.Location.Name.ToLower() == "final room")
+                    {
+                        Console.WriteLine($"Congratulations! You have beaten BORK! You finished the game in {moveCounter} moves.\n" +
+                            $"Press any key to QUIT.");
+
+                        Console.ReadKey();
+                        Environment.Exit(0);
+
+
+
+                    }
                 }
 
                 Console.WriteLine();
@@ -60,26 +79,26 @@ namespace Inlämningsuppgift3.Classes
 
                     case ("look"):
 
-                        Player.Look(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+                        Player.Look(InputProcessor.PlayerInput, InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
                         break;
 
                     case ("inventory"):
-                    case ("open inventory"):
                         Player.ShowInventory();
                         break;
 
                     case ("go"):
 
-                        newLocation = Player.Move(InputProcessor.PlayerInputSplittedString[1], Rooms);
+                        newLocation = Player.Move(InputProcessor.PlayerInputSplittedString, InputProcessor.SecondWordToEnd, Rooms);
                         break;
 
                     case ("use"):
-                        Player.Use(InputProcessor.PlayerInput, InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
-
+                        Player.Use(InputProcessor.PlayerInput, InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString, InputProcessor.FirstItemString, InputProcessor.SecondItemString);
+                        
                         break;
 
                     case ("take"):
                         Player.Take(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+                        
 
                         break;
 
@@ -88,14 +107,62 @@ namespace Inlämningsuppgift3.Classes
 
                         break;
 
+                    case ("open"):
+                        Player.Open(InputProcessor.SecondWordToEnd, InputProcessor.PlayerInputSplittedString);
+                        
+                        break;
+
+                    case ("help"):
+                        
+                        Help();
+                        break;
+
                     default:
                         Console.WriteLine($"I don't know the word \"{InputProcessor.PlayerInputSplittedString[0]}\".");
                         break;
 
 
                 }
-
+                moveCounter++;
             }
+
+        }
+
+        public void Intro()
+        {
+            string playerInput;
+            string title = "▀█████████▄   ▄██████▄     ▄████████    ▄█   ▄█▄ \r\n  ███    ███ ███    ███   ███    ███   ███ ▄███▀ \r\n  ███    ███ ███    ███   ███    ███   ███▐██▀   \r\n ▄███▄▄▄██▀  ███    ███  ▄███▄▄▄▄██▀  ▄█████▀    \r\n▀▀███▀▀▀██▄  ███    ███ ▀▀███▀▀▀▀▀   ▀▀█████▄    \r\n  ███    ██▄ ███    ███ ▀███████████   ███▐██▄   \r\n  ███    ███ ███    ███   ███    ███   ███ ▀███▄ \r\n▄█████████▀   ▀██████▀    ███    ███   ███   ▀█▀ \r\n                          ███    ███   ▀         ";
+
+
+            Console.WriteLine($"{title}");
+            while (true)
+            {
+              
+                Console.WriteLine("\nWelcome to Bork! Type 'start' to start the game. If you need help type 'help'. Have fun!");
+
+
+                playerInput = Console.ReadLine();
+
+                switch (playerInput)
+                {
+                    case ("help"):
+                        Help();
+                        break;
+                    case ("start"):
+                        GameRunning = true;
+                        return;
+                        
+                }
+            
+            }
+            
+        }
+        public void Help()
+        {
+            Console.WriteLine("Write commands in the console to advance in the game.\n" +
+                "If you don't know what to do, type 'inspect' to get a clearer picture about what's going on around you.\n" +
+                "You can use items with other items with the syntax: use 'item1' on 'item2'.\n" +
+                "Good luck!");
 
         }
 
