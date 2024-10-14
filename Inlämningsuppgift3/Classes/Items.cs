@@ -71,6 +71,7 @@ namespace Inlämningsuppgift3.Classes
                 newItem.Name = "Chewing gum stick";
                 newItem.Description = "A stick with a piece of chewed gum attached to the end of it.";
                 inventory.Add(newItem);
+                return;
 
             }
             if (((Name.ToLower() == "chewing gum stick") && (item2.Name.ToLower() == "golden key")) || ((Name.ToLower() == "golden key") && (item2.Name.ToLower() == "chewed gum on a stick")))
@@ -86,7 +87,10 @@ namespace Inlämningsuppgift3.Classes
                 newItem.Name = "Golden key";
                 newItem.Description = "A shining golden key that probably fits an equally shining door.";
                 inventory.Add(newItem);
+                return;
             }
+
+            Console.WriteLine("That doesn't work.");
         }
 
         //keys on doors
