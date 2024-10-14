@@ -89,6 +89,11 @@ namespace Inlämningsuppgift3.Classes
                 inventory.Add(newItem);
                 return;
             }
+            if (((Name.ToLower() == "golden key") && (item2.Name.ToLower() == "stick")) || ((Name.ToLower() == "stick") && (item2.Name.ToLower() == "golden key")))
+            {
+                Console.WriteLine("You can reach the key with the stick,\nbut if you tried to touch it you would propably just push it down further.");
+                return;
+            }
 
             Console.WriteLine("That doesn't work.");
         }
