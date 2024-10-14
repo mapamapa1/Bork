@@ -47,6 +47,12 @@ namespace Inlämningsuppgift3.Classes
                 SecondWordToEnd = "";
             }
 
+            if (PlayerInput.Contains("pick up"))
+            {
+                PlayerInput = PlayerInput.Replace("pick up", "pick");
+                UpdateProperties();
+            }
+
             PlayerInputSplittedString[0] = WordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
         }
 
@@ -73,6 +79,12 @@ namespace Inlämningsuppgift3.Classes
             IndexOfFirstSpace = PlayerInput.IndexOf(' ');
             FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
             SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+        }
+
+        public void PickUpCommandTruncated()
+        {
+
+
         }
     }
 }

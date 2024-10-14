@@ -324,9 +324,11 @@ namespace Inlämningsuppgift3.Classes
                         Location.Items.Add(item);
                         Inventory.Remove(item);
                         Console.WriteLine($"You drop the {item.Name.ToLower()}.");
-                        break;
+                        return; 
                     }
+
                 }
+                Console.WriteLine($"What '{droppedObject}'?");
             }
             else
             {

@@ -10,5 +10,3 @@ look ajsdakldja doesn't work
 make so you can only use items when in inventory
 
 use rusty key on door doesn't work
-
-"pick up" doesn't work
