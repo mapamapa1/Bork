@@ -46,7 +46,6 @@ namespace Inlämningsuppgift3.Classes
 
                 if (newLocation)
                 {                   
-
                     Console.WriteLine(Player.Location.RoomDescription());
                     
                     newLocation = false;
@@ -58,9 +57,6 @@ namespace Inlämningsuppgift3.Classes
 
                         Console.ReadKey();
                         Environment.Exit(0);
-
-
-
                     }
                 }
 
@@ -127,7 +123,6 @@ namespace Inlämningsuppgift3.Classes
             }
 
         }
-
         public void Intro()
         {
             string playerInput;
@@ -165,6 +160,5 @@ namespace Inlämningsuppgift3.Classes
                 "Good luck!");
 
         }
-
     }
 }
