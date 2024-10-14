@@ -154,9 +154,10 @@ namespace Inlämningsuppgift3.Classes
         }
         public void Help()
         {
-            Console.WriteLine("Write commands in the console to advance in the game.\n" +
-                "If you don't know what to do, type 'inspect' to get a clearer picture about what's going on around you.\n" +
-                "You can use items with other items with the syntax: use 'item1' on 'item2'.\n" +
+            Console.WriteLine("\nWrite commands in the console to advance in the game.\n" +
+                "If you don't know what to do, type 'inspect' to get a clearer picture of what's going on around you.\n" +
+                "Type 'inventory' to see what you are currently carrying.\n" +
+                "You can use items with other items with the syntax: use item1 on item2.\n" +
                 "Good luck!");
 
         }

@@ -5,8 +5,10 @@
 TODO: 
 
 
-Can't open iron door by saying "open iron door" only "open door"
+look ajsdakldja doesn't work
 
+make so you can only use items when in inventory
 
-objects of interest
+use rusty key on door doesn't work
 
+"pick up" doesn't work
