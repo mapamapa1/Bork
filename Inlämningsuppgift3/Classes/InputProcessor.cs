@@ -49,9 +49,16 @@ namespace Inlämningsuppgift3.Classes
 
             if (PlayerInput.Contains("pick up"))
             {
-                PlayerInput = PlayerInput.Replace("pick up", "pick");
-                UpdateProperties();
+                PlayerInput = PlayerInput.Replace("pick up", "pick");               
             }
+            if (PlayerInput.Contains("the"))
+            {
+                PlayerInput = PlayerInput.Replace("the","");               
+            }
+
+            RemoveExtraSpaces();
+            UpdateProperties();
+
 
             PlayerInputSplittedString[0] = WordListProcessor.CheckActionSynonyms(PlayerInputSplittedString[0]);
         }
@@ -75,16 +82,23 @@ namespace Inlämningsuppgift3.Classes
         public void UpdateProperties()
         {
             PlayerInput = PlayerInput.ToLower();
-            PlayerInputSplittedString = PlayerInput.Split(" ");
-            IndexOfFirstSpace = PlayerInput.IndexOf(' ');
-            FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
-            SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+            if (PlayerInputSplittedString.Length > 1)
+            {
+                PlayerInputSplittedString = PlayerInput.Split(" ");
+                IndexOfFirstSpace = PlayerInput.IndexOf(' ');
+                FirstWord = PlayerInput.Substring(0, IndexOfFirstSpace);
+                SecondWordToEnd = PlayerInput.Substring(IndexOfFirstSpace + 1);
+            }
+            
         }
 
-        public void PickUpCommandTruncated()
+        public void RemoveExtraSpaces()
         {
-
-
+            string[] splitString = PlayerInput.Split(" ");
+            List<string> splitStringList = new List<string>(splitString);
+            splitStringList.Remove("");
+            PlayerInput = string.Join(" ", splitStringList);
+         
         }
     }
 }

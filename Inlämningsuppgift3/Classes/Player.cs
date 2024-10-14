@@ -82,9 +82,12 @@ namespace Inlämningsuppgift3.Classes
                         foreach (Item item in Location.Items)
                         {
                             item.IsVisible = true;
+                            Console.WriteLine(item.InEnvironmentDescription);
                         }
+                        return;
                     }
                 }
+                Console.WriteLine($"What is '{secondWordToEnd}'?");
             }
         }
 
@@ -109,7 +112,7 @@ namespace Inlämningsuppgift3.Classes
                     }
                     else
                     {
-                        Console.WriteLine("There is a door blocking your path.");
+                        Console.WriteLine($"There is a {roomexit.Name.ToLower()} blocking your path.");
                         return false;
                     }
                 }
@@ -122,6 +125,11 @@ namespace Inlämningsuppgift3.Classes
                         hasMoved = true;
                     }
                 }
+            }
+            if (direction != "north" && direction != "south" && direction != "west" && direction != "east")
+            {
+                Console.WriteLine($"'{direction}' is not a valid direction. Directions: 'north', 'south', 'east', 'west'.");
+                return false;
             }
 
             if (hasMoved)
@@ -149,10 +157,25 @@ namespace Inlämningsuppgift3.Classes
 
                     if (foundObject1 != null && foundObject2 == null)
                     {
+                        if (secondItem == "door")
+                        {
+                            if (Location.RoomExits.Count == 1)
+                            {
+                                foundObject1.Combination(Location.RoomExits[0]);
+                                return;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Which door?");
+                                return;
+                            }
+                        }
+
                         RoomExit? foundRoomExit = Location.RoomExits.FirstOrDefault(i => i.Name.ToLower() == secondItem);
 
                         if (foundRoomExit != null)
                         {
+                            
                             foundObject1.Combination(foundRoomExit);
                         }
                         else
@@ -192,6 +215,8 @@ namespace Inlämningsuppgift3.Classes
 
         public void Open(string secondWordToEnd, string[] splittedString)
         {
+            int amountOfRoomExits = Location.RoomExits.Count;
+
             if (secondWordToEnd == "")
             {
                 Console.WriteLine("What do you want to 'open'?");
@@ -210,12 +235,30 @@ namespace Inlämningsuppgift3.Classes
             switch (amountOfClosedExits)
             {
                 case 0:
-                    Console.WriteLine("There is nothing to open here");
+
+                    if(amountOfRoomExits == 1)
+                    {
+
+                        Console.WriteLine("The door is already open.");
+                        return;
+                    }
+                    
+                    Console.WriteLine("There is nothing to open here.");
                     return;
 
                 case 1:
+
+
+                    if (amountOfRoomExits > 1 && secondWordToEnd == "door")
+                    {
+                        Console.WriteLine("Which door do you want to open?");
+                        return;
+                    }
+
+
                     foreach (RoomExit roomExit in Location.RoomExits)
                     {
+                       
                         if (secondWordToEnd == roomExit.Name.ToLower() || secondWordToEnd == "door")
                         {
                             if (!roomExit.IsLocked)

@@ -91,7 +91,7 @@ namespace Inlämningsuppgift3.Classes
             }
             if (((Name.ToLower() == "golden key") && (item2.Name.ToLower() == "stick")) || ((Name.ToLower() == "stick") && (item2.Name.ToLower() == "golden key")))
             {
-                Console.WriteLine("You can reach the key with the stick,\nbut if you tried to touch it you would propably just push it down further.");
+                Console.WriteLine("You can reach the key with the stick, but if you tried to touch it you would propably just push it down further.");
                 return;
             }
 

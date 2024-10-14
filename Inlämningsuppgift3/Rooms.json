@@ -50,7 +50,7 @@
       {
         "Name": "Stick",
         "Description": "A stick from an oak tree, it's quite straight. It's a good stick.",
-        "InEnvironmentDescription": "A stick lies under the oak tree.\n",
+        "InEnvironmentDescription": "Under the tree you notice a stick that must have fallen from it.\n",
         "IsVisible": false,
         "CanBeTaken": true
       }
@@ -59,7 +59,7 @@
     "RoomObjectOfInterest": [
       {
         "Name": "Tree",
-        "Description": "A large oak tree, must be more than fifty years old.\nOn the ground next to it you notice a stick that has fallen from the tree."
+        "Description": "A large oak tree, must be more than fifty years old."
       }
     ]
   },
@@ -99,7 +99,7 @@
         "Name": "Golden key",
         "Synonyms": [ "key" ],
         "Description": "A key of pure gold.",
-        "InEnvironmentDescription": "A golden key is stuck down the drain.\n",
+        "InEnvironmentDescription": "When you look down the drain you see that a golden key is stuck in the sludge below.\n",
         "CantBeTakenDescription": "Your hand is too big to be able to reach through the iron bars of the drainage hole.",
         "IsVisible": false,
         "CanBeTaken": false
@@ -108,7 +108,7 @@
     "RoomObjectOfInterest": [
       {
         "Name": "Drain",
-        "Description": "A drainage hole that collects water from the floor. When you look closer you see something down the drain. A golden key is stuck in the sludge below."
+        "Description": "A drainage hole that collects water from the floor."
       }
     ]
   },
