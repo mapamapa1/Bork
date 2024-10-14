@@ -18,13 +18,7 @@ namespace Inlämningsuppgift3.Classes
 
         public Player()
         {
-            //loadStartingItems()
-        }
-
-        public void DropItem(Item item)
-        {
-            Location.Items.Add(item);
-            Inventory.Remove(item);
+            
         }
 
         public void ShowInventory()
