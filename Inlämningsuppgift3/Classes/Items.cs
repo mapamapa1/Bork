@@ -25,6 +25,8 @@
                     Item chewedGum = new Item();
                     chewedGum.Name = "Chewed gum";
                     chewedGum.Description = "A piece of chewed gum, the taste is long gone.";
+                    chewedGum.IsVisible = true;
+                    chewedGum.CanBeTaken = true;    
                     inventory.Add(chewedGum);
 
                     break;
@@ -64,6 +66,8 @@
                 Console.WriteLine("You put the chewed gum at the end of the stick. You have created an abomination.");
                 newItem.Name = "Chewing gum stick";
                 newItem.Description = "A stick with a piece of chewed gum attached to the end of it.";
+                newItem.IsVisible = true;
+                newItem.CanBeTaken = true;
                 inventory.Add(newItem);
                 return;
 
@@ -80,6 +84,8 @@
                     "You put the key in your inventory.");
                 newItem.Name = "Golden key";
                 newItem.Description = "A shining golden key that probably fits an equally shining door.";
+                newItem.IsVisible = true;
+                newItem.CanBeTaken = true;
                 inventory.Add(newItem);
                 return;
             }
